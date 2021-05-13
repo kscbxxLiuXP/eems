@@ -1,28 +1,50 @@
-import ss from "@/store/store";
-
 const user = {
-    state: ss.user ? ss.user :
+    state:
         {
-            user: {
-                name: "",
-            }
+            users: [
+                {
+                    username: "admin",
+                    password: "admin",
+                    type: "root",
+                },
+                {
+                    username: "zhry",
+                    password: "zhry",
+                    type: "commander",
+                },
+                {
+                    username: "gzry",
+                    password: "gzry",
+                    type: "staff",
+                },
+                {
+                    username: "zj",
+                    password: "zj",
+                    type: "expert",
+                }
+            ]
         },
 
     getters: {
+        getUsers(state) {
+            return state.users;
+        },
         getUser(state) {
-            return state.user;
+            return function (username) {
+                return state.users.find(item => item.username === username)
+            }
         }
     },
 
     mutations: {
-        updateUser(state, user) {
-            state.user = user;
+        updateUsers(state, users) {
+            state.users = users;
         }
     },
 
     actions: {
-        asyncUpdateUser(context, user) {
-            context.commit("updateUser", user);
+        asyncUpdateUser(context, users) {
+            context.commit("updateUsers", users);
         }
     },
 }

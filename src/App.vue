@@ -8,8 +8,9 @@
 export default {
     name: 'App',
     mounted() {
-      window.addEventListener('unload',this.saveState);
-      console.log(localStorage.getItem('state'))
+      // window.addEventListener('unload',this.saveState);
+      // console.log(localStorage.getItem('state'))
+        console.log(this.$store.state)
     },
     methods: {
         saveState() {

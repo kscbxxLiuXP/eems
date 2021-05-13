@@ -11,6 +11,7 @@ import DangerFirm from "@/views/Staff/DangerFirm";
 import StaffReport from "@/views/Staff/StaffReport";
 import CommanderReport from "@/views/Commander/CommanderReport";
 import ExportReport from "@/views/Expert/ExportReport";
+import Dashboard from "@/views/Dashboard/Dashboard";
 
 Vue.use(Router)
 
@@ -30,8 +31,14 @@ const router = new Router({
         {
             path: '/home',
             name: 'home',
+            redirect:'/home/dashboard',
             component: Home,
             children:[
+                {
+                    path:'/home/dashboard',
+                    name:'Dashboard',
+                    component:Dashboard,
+                },
                 {
                     path:'/userManage',
                     name:'UserManage',

@@ -2,7 +2,9 @@
     <div class="sider-component-container">
         <div class="sider-component-container-title">{{ title }}</div>
 
-        <div class="sider-component-container-item" v-for="(it,index) in items" v-bind:key="index" @click="onClick(it.to)">
+        <div class="sider-component-container-item"
+             v-bind:class="{selected:it.to===route}"
+             v-for="(it,index) in items" v-bind:key="index" @click="onClick(it.to)">
             <img :src="it.icon" width="20" style="margin-right: 10px"/>
             {{ it.name }}
         </div>
@@ -12,14 +14,14 @@
 <script>
 export default {
     name: "SiderComponent",
-    props: ['title', 'items'],
+    props: ['title', 'items', 'route'],
     data() {
         return {
             iu: require("./../../assets/icons/jiebao.png")
         }
     },
-    methods:{
-        onClick:function (to){
+    methods: {
+        onClick: function (to) {
             this.$router.push(to);
         }
     }
@@ -50,9 +52,14 @@ export default {
     font-size: 14px;
     transition: all ease-in-out 300ms;
 }
-.sider-component-container-item:hover{
+
+.sider-component-container-item:hover {
     background-color: #c6f6d5;
     transform: translateX(10px);
     cursor: pointer;
+}
+
+.selected {
+    background-color: #c6f6d5;
 }
 </style>

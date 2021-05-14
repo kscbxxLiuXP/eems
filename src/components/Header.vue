@@ -30,16 +30,8 @@ export default {
     computed: {
         loginType: function () {
             var t = localStorage.getItem('login-type')
-            var r = "暂无"
-            if (t === 'root')
-                r = "超级管理员"
-            else if (t === 'staff')
-                r = "工作人员"
-            else if (t === 'commander')
-                r = "指挥人员"
-            else if (t === 'expert')
-                r = "专家"
-            return r
+
+            return t
         },
         loginUsername:function (){
             return localStorage.getItem('token')

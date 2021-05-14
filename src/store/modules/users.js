@@ -5,22 +5,46 @@ const user = {
                 {
                     username: "admin",
                     password: "admin",
-                    type: "root",
+                    type: "超级管理员",
+                    staffName: "刘军",
+                    staffID: "1",
+                    staffCode: "78986",
+                    gender: "男",
+                    birth: "2003-02-02",
+                    status: "正常"
                 },
                 {
                     username: "zhry",
                     password: "zhry",
-                    type: "commander",
+                    type: "指挥人员",
+                    staffName: "王磊",
+                    staffID: "2",
+                    staffCode: "34535",
+                    gender: "男",
+                    birth: "2003-02-02",
+                    status: "正常"
                 },
                 {
                     username: "gzry",
                     password: "gzry",
-                    type: "staff",
+                    type: "工作人员",
+                    staffName: "王鑫",
+                    staffID: "3",
+                    staffCode: "78654",
+                    gender: "男",
+                    birth: "2003-02-02",
+                    status: "正常"
                 },
                 {
                     username: "zj",
                     password: "zj",
-                    type: "expert",
+                    type: "专家",
+                    staffName: "王天博",
+                    staffID: "4",
+                    staffCode: "675654",
+                    gender: "男",
+                    birth: "2003-02-02",
+                    status: "正常"
                 }
             ]
         },

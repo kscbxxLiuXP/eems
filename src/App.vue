@@ -8,8 +8,8 @@
 export default {
     name: 'App',
     mounted() {
-      // window.addEventListener('unload',this.saveState);
-      // console.log(localStorage.getItem('state'))
+        // window.addEventListener('unload',this.saveState);
+        // console.log(localStorage.getItem('state'))
         console.log(this.$store.state)
     },
     methods: {
@@ -20,7 +20,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 html, body {
     margin: 0;
     padding: 0;

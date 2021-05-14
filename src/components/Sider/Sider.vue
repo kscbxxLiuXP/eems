@@ -1,10 +1,10 @@
 <template>
     <div class="container">
         <SiderComponent title="首页" :route="cRouter" :items="item0"/>
-        <SiderComponent title="超级管理员" :route="cRouter" v-show="loginType==='root'" :items="item1"/>
-        <SiderComponent title="工作人员" :route="cRouter" v-show="loginType==='staff'" :items="item2"/>
-        <SiderComponent title="指挥人员" :route="cRouter" v-show="loginType==='commander'" :items="item3"/>
-        <SiderComponent title="专家" :route="cRouter" v-show="loginType==='expert'" :items="item4"/>
+        <SiderComponent title="超级管理员" :route="cRouter" v-show="loginType==='超级管理员'" :items="item1"/>
+        <SiderComponent title="工作人员" :route="cRouter" v-show="loginType==='工作人员'" :items="item2"/>
+        <SiderComponent title="指挥人员" :route="cRouter" v-show="loginType==='指挥人员'" :items="item3"/>
+        <SiderComponent title="专家" :route="cRouter" v-show="loginType==='专家'" :items="item4"/>
         <div class="container-footer">用户工作区</div>
     </div>
 </template>
@@ -47,8 +47,13 @@ export default {
                     to: '/goods',
                 },
                 {
+                    name: "城市信息管理",
+                    icon: require("./../../assets/icons/chengshi.png"),
+                    to: '/city',
+                },
+                {
                     name: "事件管理",
-                    icon: require("./../../assets/icons/wuzi.png"),
+                    icon: require("./../../assets/icons/shijian.png"),
                     to: '/event',
                 },
                 {

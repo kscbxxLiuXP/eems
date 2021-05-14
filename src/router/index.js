@@ -12,6 +12,7 @@ import StaffReport from "@/views/Staff/StaffReport";
 import CommanderReport from "@/views/Commander/CommanderReport";
 import ExportReport from "@/views/Expert/ExportReport";
 import Dashboard from "@/views/Dashboard/Dashboard";
+import City from "@/views/Staff/City";
 
 Vue.use(Router)
 
@@ -53,6 +54,11 @@ const router = new Router({
                     path:'/goods',
                     name:'Goods',
                     component:Goods,
+                },
+                {
+                    path:'/city',
+                    name:'City',
+                    component:City,
                 },
                 {
                     path:'/event',

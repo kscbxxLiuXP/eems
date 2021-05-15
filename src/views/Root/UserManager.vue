@@ -100,11 +100,16 @@
                         <span >{{ scope.row.staffCode }}</span>
                     </template>
                 </el-table-column>
+
                 <el-table-column
                     label="人员类型"
-                    width="120">
+                    width="120"
+                >
                     <template slot-scope="scope">
-                        <span >{{ scope.row.type }}</span>
+                        <el-tag v-if="scope.row.type==='工作人员'" size="medium" type="danger">{{ scope.row.type }}</el-tag>
+                        <el-tag v-if="scope.row.type==='专家'" size="medium" type="warning">{{ scope.row.type }}</el-tag>
+                        <el-tag v-if="scope.row.type==='指挥人员'" size="medium" type="success">{{ scope.row.type }}</el-tag>
+                        <el-tag v-if="scope.row.type==='超级管理员'" size="medium" type="primary">{{ scope.row.type }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -365,12 +370,6 @@ export default {
             this.$store.dispatch("asyncUpdateUser", tmp)
         },
         // eslint-disable-next-line no-unused-vars
-        handleEdit(index, row){
-            this.selectedIdEdit = row.staffID
-            this.editForm = row
-            console.log(this.editForm)
-            this.editFormVisible = true
-        },
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
@@ -413,6 +412,13 @@ export default {
             this.$store.dispatch("asyncUpdateUser", tmp)
             this.$refs['form'].resetFields();
         },
+        // eslint-disable-next-line no-unused-vars
+        handleEdit(index, row){
+            this.editForm = JSON.parse(JSON.stringify(row))
+            this.selectedIdEdit = row.staffID
+            console.log(this.selectedIdEdit)
+            this.editFormVisible = true
+        },
         editStaff(){
             this.$refs['editForm'].validate((valid) => {
                 if (valid) {
@@ -426,12 +432,16 @@ export default {
             let tmp = this.$store.getters.getUsers
             tmp.forEach((staff) => {
                 if(staff.staffID === this.selectedIdEdit) {
-                    staff = this.editForm
+                    this.$message.success("find!")
+                    for(let key in staff){
+                        staff[key] = this.editForm[key]
+                    }
+                    console.log(staff)
                 }
             })
             this.$store.dispatch("asyncUpdateUser", tmp)
             this.editFormVisible = false
-            this.$message.success('编辑成功')
+            this.$message.success("编辑成功！")
         }
     },
     computed : {

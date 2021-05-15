@@ -13,6 +13,7 @@ import CommanderReport from "@/views/Commander/CommanderReport";
 import ExportReport from "@/views/Expert/ExportReport";
 import Dashboard from "@/views/Dashboard/Dashboard";
 import City from "@/views/Staff/City";
+import Map from "@/views/Map";
 
 Vue.use(Router)
 
@@ -84,7 +85,11 @@ const router = new Router({
                     path:'/expertReport',
                     name:'ExpertReport',
                     component:ExportReport,
-                },
+                },{
+                path:'/map',
+                    name:'map',
+                    component:Map
+                }
 
             ]
         },

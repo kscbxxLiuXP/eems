@@ -29,7 +29,12 @@ export default {
                 name: "首页",
                 icon: require("./../../assets/icons/yonghu.png"),
                 to: '/home/dashboard',
-            }],
+            },{
+                name: "地图",
+                icon: require("./../../assets/icons/yonghu.png"),
+                to: '/map',
+            }
+            ],
             item1: [{
                 name: "用户管理",
                 icon: require("./../../assets/icons/yonghu.png"),

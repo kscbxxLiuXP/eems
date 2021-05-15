@@ -148,28 +148,92 @@
             </el-col>
         </el-row>
 
-        <el-dialog title="新增服务对象" :visible.sync="dialogFormVisible" width="500px">
-            <el-form :model="form">
-                <el-form-item label="账号" :label-width="formLabelWidth">
+        <el-dialog title="新增用户" :visible.sync="dialogFormVisible" width="500px">
+            <el-form :model="form" :rules="rules" ref="form">
+                <el-form-item label="账号" :label-width="formLabelWidth" prop="username">
                     <el-input v-model="form.username" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="密码" :label-width="formLabelWidth">
+                <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
                     <el-input v-model="form.password" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="姓名" :label-width="formLabelWidth">
+                <el-form-item label="姓名" :label-width="formLabelWidth" prop="staffName">
                     <el-input v-model="form.staffName" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="性别" :label-width="formLabelWidth">
+                <el-form-item label="性别" :label-width="formLabelWidth" prop="gender">
                     <template>
                         <el-radio v-model="form.gender" label="男" value="男">男</el-radio>
                         <el-radio v-model="form.gender" label="女" value="女">女</el-radio>
                     </template>
                 </el-form-item>
+                <el-form-item label="出生日期" prop="birth">
+                    <el-date-picker
+                        v-model="form.birth"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="员工类型" prop="type">
+                    <el-select v-model="form.type" placeholder="请选择">
+                        <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
 
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                <el-button @click="closeAddNewStaff">取 消</el-button>
+                <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+            </div>
+        </el-dialog>
+
+
+        <el-dialog title="编辑用户信息" :visible.sync="editFormVisible" width="500px">
+            <el-form :model="editForm" :rules="rules" ref="editForm">
+                <el-form-item label="账号" :label-width="formLabelWidth" prop="username">
+                    <el-input v-model="editForm.username" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+                    <el-input v-model="editForm.password" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名" :label-width="formLabelWidth" prop="staffName">
+                    <el-input v-model="editForm.staffName" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="性别" :label-width="formLabelWidth" prop="gender">
+                    <template>
+                        <el-radio v-model="editForm.gender" label="男" value="男">男</el-radio>
+                        <el-radio v-model="editForm.gender" label="女" value="女">女</el-radio>
+                    </template>
+                </el-form-item>
+                <el-form-item label="出生日期" prop="birth">
+                    <el-date-picker
+                        v-model="editForm.birth"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="员工类型" prop="type">
+                    <el-select v-model="editForm.type" placeholder="请选择">
+                        <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="closeEditStaff">取 消</el-button>
+                <el-button type="primary" @click="editStaff">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -215,12 +279,45 @@ export default {
                 birth: "",
                 status: "正常"
             },
+            editForm: {
+                username: "",
+                password: "",
+                type: "",
+                staffName: "",
+                staffID: "",
+                staffCode: "",
+                gender: "",
+                birth: "",
+                status: ""
+            },
+            rules: {
+                username: [
+                    { required: true, message: '请输入账号', trigger: 'blur' },
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' }
+                ],
+                staffName: [
+                    { required: true, message: '请填写用户姓名', trigger: 'blur' }
+                ],
+                gender: [
+                    { required: true, message: '请选择性别', trigger: 'change' }
+                ],
+                birth: [
+                    { required: true, message: '请选择出生日期', trigger: 'change' }
+                ],
+                type: [
+                    { required: true, message: '请选择员工类型', trigger: 'change' }
+                ],
+            },
             selectedUsers: [],
             currentPage: 1,
-            pageSize: 6,
+            pageSize: 5,
             dialogFormVisible: false,
+            editFormVisible: false,
             tableData: this.$store.getters.getUsers,
-            formLabelWidth: '60px'
+            formLabelWidth: '60px',
+            selectedIdEdit: ''
         }
     },
     methods: {
@@ -269,6 +366,10 @@ export default {
         },
         // eslint-disable-next-line no-unused-vars
         handleEdit(index, row){
+            this.selectedIdEdit = row.staffID
+            this.editForm = row
+            console.log(this.editForm)
+            this.editFormVisible = true
         },
         handleSelectionChange(val) {
             this.multipleSelection = val;
@@ -283,6 +384,54 @@ export default {
         handleCurrentChange(val) {
             console.log(`当前页: ${val}`);
             this.currentPage = val;
+        },
+        closeAddNewStaff() {
+            this.$refs['form'].resetFields();
+            this.dialogFormVisible = false
+        },
+        closeEditStaff() {
+            this.$refs['editForm'].resetFields();
+            this.editFormVisible = false
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.add()
+                } else {
+                    return false;
+                }
+            });
+        },
+        add(){
+            this.dialogFormVisible = false
+            this.$message.success("用户添加成功！")
+            this.form.staffID ="" + (Math.max.apply(Math, this.$store.getters.getUsers.map(function(o) {return parseInt(o.staffID)})) + 1)
+            this.form.staffCode = "" + Math.round(Math.random() * 100000)
+            let tmpform = JSON.parse(JSON.stringify(this.form)) // 深拷贝
+            let tmp =this.$store.getters.getUsers
+            tmp.push(tmpform)
+            this.$store.dispatch("asyncUpdateUser", tmp)
+            this.$refs['form'].resetFields();
+        },
+        editStaff(){
+            this.$refs['editForm'].validate((valid) => {
+                if (valid) {
+                    this.edit()
+                } else {
+                    return false;
+                }
+            });
+        },
+        edit(){
+            let tmp = this.$store.getters.getUsers
+            tmp.forEach((staff) => {
+                if(staff.staffID === this.selectedIdEdit) {
+                    staff = this.editForm
+                }
+            })
+            this.$store.dispatch("asyncUpdateUser", tmp)
+            this.editFormVisible = false
+            this.$message.success('编辑成功')
         }
     },
     computed : {

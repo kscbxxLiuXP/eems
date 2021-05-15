@@ -55,7 +55,7 @@ const user = {
         },
         getUser(state) {
             return function (username) {
-                return state.users.find(item => item.username === username)
+                return state.users.find(item => item.username ===  username.toString())
             }
         }
     },

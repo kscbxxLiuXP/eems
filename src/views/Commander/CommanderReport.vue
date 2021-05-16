@@ -168,28 +168,88 @@
             >
                 <template slot-scope="scope">
                     <el-button
-                        icon="el-icon-edit"
+                        icon="el-icon-view"
 
                         type="primary"
-                        @click="()=>{
-                          dialogVisible=true;
-                          handleEdit(scope.$index, scope.row)
-                        }">审核
+                        @click="handleViewClicked(scope.row)" :disabled="scope.row.status!=='指挥人员审核中'">审核
                     </el-button>
                 </template>
             </el-table-column>
 
         </el-table>
+        <el-dialog
+            title="接报审核"
+            :visible.sync="dialogVisible"
+            width="50%"
+        >
+            <div style="display: flex">
+                <div >
+                    <div>
+                        ID:{{ currentReport.reportID }}
+                    </div>
+                    <div>
+                        事件名称:{{ currentReport.reportID }}
+                    </div>
+
+                    <el-popover trigger="hover" placement="right">
+                        <p>企业名称: {{ getFirm().name }}</p>
+                        <p>企业地址: {{ getFirm().address }}</p>
+                        <p>企业法人: {{ getFirm().person }}</p>
+                        <p>企业联系电话: {{ getFirm().phone }}</p>
+                        <SmallMap :lat="getFirm().location.lat"
+                                  :lng="getFirm().location.lng"/>
+                        <span slot="reference" class="name-wrapper">
+                            <div>风险企业:{{ getFirm().name }}
+
+                            </div>
+                        </span>
+                    </el-popover>
+
+                    <div>
+                        代码:{{ currentReport.reportCode }}
+                    </div>
+                    <div>
+                        报警人:{{ currentReport.reportPerson }}
+                    </div>
+                    <div>
+                        报警人电话:{{ currentReport.reportPersonPhone }}
+                    </div>
+                    <div>
+                        接报时间:{{ currentReport.reportTime }}
+                    </div>
+                    <div>
+                        流程创建者:{{ currentReport.flowPerson }}
+                    </div>
+                    <div>
+                        流程创建时间:{{ currentReport.flowTime }}
+                    </div>
+                </div>
+                <div>
+                    流程
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible=false">取 消</el-button>
+                <el-button type="warning" @click="handleExpertIn">申请专家接入</el-button>
+            <el-button type="primary" @click="handleViewPass">通过审核</el-button>
+            <el-button type="danger" @click="handleViewFail">驳回</el-button>
+
+  </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+import SmallMap from "@/components/SmallMap";
+
 export default {
     name: "CommanderReport",
+    // eslint-disable-next-line vue/no-unused-components
+    components: {SmallMap},
     data() {
         return {
             tableData: this.$store.getters.getReports,
-            dialogVisible: false,
+            dialogVisible: true,
             eventName: '',
             firmID: '',
             reportPerson: '',
@@ -217,6 +277,7 @@ export default {
                     label: '审核通过'
                 }
             ],
+            currentReport: {firmID: 1},
 
         }
     },
@@ -277,6 +338,24 @@ export default {
             }
             this.tableData = searchList
             this.$message.success("共查找到 " + this.tableData.length + " 条记录！")
+        },
+        handleViewClicked(row) {
+            this.dialogVisible = true;
+            this.currentReport = JSON.parse(JSON.stringify(row));
+            console.log(row)
+        },
+        handleViewPass() {
+            //审核通过
+        },
+        handleViewFail() {
+            //审核通过
+        },
+        handleExpertIn() {
+            //审核通过
+        },
+        getFirm() {
+            const firm = this.$store.getters.getFirm(parseInt(this.currentReport.firmID))
+            return firm
         },
     },
     mounted() {

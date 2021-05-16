@@ -1,7 +1,8 @@
 <template>
     <div class="wrapper">
         <div style="border-radius: 20px;width: 750px">
-            <img src="../assets/img/login.png" width="750px" height="600"/>
+            <img src="../assets/img/login.png" width="750px" style="margin-top: 50px"/>
+
         </div>
 
 

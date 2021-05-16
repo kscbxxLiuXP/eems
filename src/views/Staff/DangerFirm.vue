@@ -7,9 +7,6 @@
             <el-header style="height: 100px">
                 <el-form :inline="true" :model="formInline">
 
-                    <el-form-item label="企业的ID">
-                        <el-input v-model="formInline.id" placeholder="不限"></el-input>
-                    </el-form-item>
 
                     <el-form-item label="企业名称">
                         <el-input v-model="formInline.name" placeholder="不限"></el-input>
@@ -19,15 +16,15 @@
                         <el-input v-model="formInline.address" placeholder="不限"></el-input>
                     </el-form-item>
 
-                    <el-form-item style="margin-left: 15px">
-                        <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
-                    </el-form-item>
-                </el-form>
-
-                <el-form :inline="true" :model="formInline">
                     <el-form-item label="企业法人">
                         <el-input v-model="formInline.person" placeholder="不限"></el-input>
                     </el-form-item>
+
+
+                </el-form>
+
+                <el-form :inline="true" :model="formInline">
+
 
                     <el-form-item label="法人电话">
                         <el-input v-model="formInline.phone" placeholder="不限"></el-input>
@@ -44,8 +41,12 @@
                         </el-select>
                     </el-form-item>
 
-                    <el-form-item>
-                        <el-button type="danger" icon="el-icon-refresh" @click="refreshInput">重置</el-button>
+
+                    <el-form-item style="margin-left: 80px">
+                        <el-button-group>
+                            <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
+                            <el-button type="danger" icon="el-icon-refresh" @click="refreshInput">重置</el-button>
+                        </el-button-group>
                     </el-form-item>
                 </el-form>
             </el-header>
@@ -251,7 +252,7 @@
                     </el-form>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="editFormVisible = false">取 消</el-button>
+                <el-button @click="editFormCancel('form')">取 消</el-button>
                 <el-button type="primary" @click="confirm('form')">确 定</el-button>
                     </span>
             </el-dialog>
@@ -328,7 +329,7 @@
                     </el-form>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="addFormVisible = false">取 消</el-button>
+                <el-button @click="addFormCancel('form')">取 消</el-button>
                 <el-button type="primary" @click="addConfirm('form')">确 定</el-button>
                     </span>
             </el-dialog>
@@ -377,6 +378,10 @@ export default {
                 id: '',
                 name: '',
                 address: '',
+                location: {
+                    lat: 0,
+                    lng: 0,
+                },
                 person: '',
                 phone: '',
                 type: '',
@@ -424,11 +429,7 @@ export default {
         //查询按钮
         search() {
             let searchList = this.$store.getters.getFirms
-            if (this.formInline.id !== "") {
-                searchList = searchList.filter((obj) => {
-                    return obj.id.indexOf(this.formInline.id) !== -1
-                })
-            }
+
             if (this.formInline.name !== "") {
                 searchList = searchList.filter((obj) => {
                     return obj.name.indexOf(this.formInline.name) !== -1
@@ -436,17 +437,17 @@ export default {
             }
             if (this.formInline.address !== "") {
                 searchList = searchList.filter((obj) => {
-                    return obj.address === this.formInline.address
+                    return obj.address.indexOf(this.formInline.address) !== -1
                 })
             }
             if (this.formInline.person !== "") {
                 searchList = searchList.filter((obj) => {
-                    return obj.person === this.formInline.person
+                    return obj.person.indexOf(this.formInline.person) !== -1
                 })
             }
             if (this.formInline.phone !== "") {
                 searchList = searchList.filter((obj) => {
-                    return obj.phone === this.formInline.phone
+                    return obj.phone.indexOf(this.formInline.phone) !== -1
                 })
             }
             if (this.formInline.type !== "") {
@@ -581,6 +582,15 @@ export default {
                 }
             });
         },
+        editFormCancel(formName) {
+            this.editFormVisible = false
+            this.$refs[formName].resetFields();
+        },
+        addFormCancel(formName) {
+            this.addFormVisible = false
+            this.$refs[formName].resetFields();
+        },
+
         //查询搜索，从百度地图获取位置选项内容
         querySearch(queryString, cb) {
             this.$axios({

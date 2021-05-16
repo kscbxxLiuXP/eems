@@ -118,48 +118,6 @@
                     </el-table>
                 </div>
 
-                <!--                 修改条目信息的对话框 -->
-                <el-dialog
-                    title="编辑流程信息"
-                    :visible.sync="dialogVisible"
-                    width="30%"
-                    :before-close="handleClose"
-                >
-                    <div>
-                        <el-form ref="form" :model="editObj" label-width="80px">
-
-                            <el-form-item label="流程ID">
-                                <el-input v-model="editObj.id" :disabled="true"></el-input>
-                            </el-form-item>
-
-                            <el-form-item label="处理名称">
-                                <el-input v-model="editObj.name"></el-input>
-                            </el-form-item>
-
-                            <el-form-item label="事件类型">
-                                <el-select
-                                    v-model="editObj.type"
-                                    placeholder="请选择类型"
-                                >
-                                    <el-option label="自然灾害水旱灾害一级" value="自然灾害水旱灾害一级"></el-option>
-                                    <el-option label="公共卫生事件矿泉水污染一级" value="公共卫生事件矿泉水污染一级"></el-option>
-                                    <el-option label="事故灾难公交车倒翻二级" value="事故灾难公交车倒翻二级"></el-option>
-                                    <el-option label="事故灾难工人猝死四级" value="事故灾难工人猝死四级"></el-option>
-                                </el-select>
-                            </el-form-item>
-
-                            <el-form-item label="类型编码">
-                                <el-input v-model="editObj.number"></el-input>
-                            </el-form-item>
-
-                        </el-form>
-                    </div>
-                    <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="confirm">确 定</el-button>
-                    </span>
-                </el-dialog>
-
 
             </el-main>
             <el-footer>
@@ -183,25 +141,25 @@
             </el-footer>
 
 
-            <!--                 增加条目的对话框 -->
+            <!--                 修改条目信息的对话框 -->
             <el-dialog
-                title="新增流程"
-                :visible.sync="dialogFormVisible"
-                width="30%"
-                :before-close="handleCloseAdd"
+                title="编辑流程信息"
+                :visible.sync="editFormVisible"
+                width="600px"
+                :before-close="handleClose"
             >
                 <div>
-                    <el-form ref="form" :model="editObj" label-width="80px">
+                    <el-form ref="form" :model="editObj" :rules="flowRules" label-width="80px">
 
-                        <el-form-item label="流程ID">
+                        <el-form-item label="流程ID" prop="id">
                             <el-input v-model="editObj.id" :disabled="true"></el-input>
                         </el-form-item>
 
-                        <el-form-item label="处理名称">
+                        <el-form-item label="处理名称" prop="name">
                             <el-input v-model="editObj.name"></el-input>
                         </el-form-item>
 
-                        <el-form-item label="事件类型">
+                        <el-form-item label="事件类型" prop="type">
                             <el-select
                                 v-model="editObj.type"
                                 placeholder="请选择类型"
@@ -213,15 +171,57 @@
                             </el-select>
                         </el-form-item>
 
-                        <el-form-item label="类型编码">
+                        <el-form-item label="类型编码" prop="number">
                             <el-input v-model="editObj.number"></el-input>
                         </el-form-item>
 
                     </el-form>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addConfirm">确 定</el-button>
+                <el-button @click="editFormCancel('form')">取 消</el-button>
+                <el-button type="primary" @click="confirm('form')">确 定</el-button>
+                    </span>
+            </el-dialog>
+
+            <!--                 增加条目的对话框 -->
+            <el-dialog
+                title="新增流程"
+                :visible.sync="addFormVisible"
+                width="600px"
+                :before-close="handleCloseAdd"
+            >
+                <div>
+                    <el-form ref="form" :model="editObj" :rules="flowRules" label-width="80px">
+
+                        <el-form-item label="流程ID" prop="id">
+                            <el-input v-model="editObj.id" :disabled="true"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="处理名称"  prop="name">
+                            <el-input v-model="editObj.name"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="事件类型"  prop="type">
+                            <el-select
+                                v-model="editObj.type"
+                                placeholder="请选择类型"
+                            >
+                                <el-option label="自然灾害水旱灾害一级" value="自然灾害水旱灾害一级"></el-option>
+                                <el-option label="公共卫生事件矿泉水污染一级" value="公共卫生事件矿泉水污染一级"></el-option>
+                                <el-option label="事故灾难公交车倒翻二级" value="事故灾难公交车倒翻二级"></el-option>
+                                <el-option label="事故灾难工人猝死四级" value="事故灾难工人猝死四级"></el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item label="类型编码"  prop="number">
+                            <el-input v-model="editObj.number"></el-input>
+                        </el-form-item>
+
+                    </el-form>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="addFormCancel('form')">取 消</el-button>
+                <el-button type="primary" @click="addConfirm('form')">确 定</el-button>
                     </span>
             </el-dialog>
 
@@ -235,14 +235,14 @@ export default {
     data() {
         return {
             //修改信息对话框的显示属性
-            dialogVisible: false,
+            editFormVisible: false,
             itemIndex: 0,
             //分页的参数
             currentPage: 1,
             pageSize: 6,
 
             //增加的对话框
-            dialogFormVisible: false,
+            addFormVisible: false,
 
             editObj: {
                 id: '',
@@ -276,6 +276,17 @@ export default {
                     label: '事故灾难工人猝死四级'
                 }
             ],
+            flowRules: {
+                name: [
+                    {required: true, message: '请输入名称', trigger: 'blur'},
+                ],
+                number: [
+                    {required: true, message: '请填写类型编码', trigger: 'blur'}
+                ],
+                type: [
+                    {required: true, message: '请选择事件类型', trigger: 'change'}
+                ],
+            },
             //通过store获得flows的数据，放到表格中
             tableData: this.$store.getters.getFlows,
             multipleSelection: []
@@ -302,7 +313,7 @@ export default {
             }
             if (this.formInline.number !== "") {
                 searchList = searchList.filter((obj) => {
-                    return obj.number === this.formInline.number
+                    return obj.number.indexOf(this.formInline.number) !== -1
                 })
             }
             this.tableData = searchList
@@ -359,7 +370,7 @@ export default {
         //edit a flow
         editFlow(item, idx) {
             this.itemIndex = idx;
-            this.dialogVisible = true;
+            this.editFormVisible = true;
             this.editObj = {
                 id: item.id,
                 name: item.name,
@@ -369,7 +380,7 @@ export default {
         },
         //add a flow
         addFlow() {
-            this.dialogFormVisible = true
+            this.addFormVisible = true
 
             this.editObj = {
                 id: parseInt(this.tableData[this.tableData.length - 1].id) + 1,
@@ -380,26 +391,54 @@ export default {
         },
         //关闭弹窗
         handleClose() {
-            this.dialogVisible = false;
+            this.editFormVisible = false;
         },
         //关闭弹窗
         handleCloseAdd() {
-            this.dialogFormVisible = false;
+            this.addFormVisible = false;
         },
         //确认编辑信息
-        confirm() {
-            this.dialogVisible = false;
-            this.tableData.splice(this.itemIndex, 1, this.editObj);
-            this.$store.dispatch("asyncUpdateFlow", this.tableData);
-            this.$message.success("流程修改成功！");
+        confirm(formName) {
+
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.editFormVisible = false;
+                    this.tableData.splice(this.itemIndex, 1, this.editObj);
+                    this.$store.dispatch("asyncUpdateFlow", this.tableData);
+                    this.$message.success("流程修改成功！");
+
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+
         },
         //确认添加的信息
-        addConfirm() {
-            this.dialogFormVisible = false;
-            this.tableData.push(this.editObj);
-            this.$store.dispatch("asyncUpdateFlow", this.tableData);
-            this.$message.success("流程添加成功！");
+        addConfirm(formName) {
+
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.addFormVisible = false;
+                    this.tableData.push(this.editObj);
+                    this.$store.dispatch("asyncUpdateFlow", this.tableData);
+                    this.$message.success("流程添加成功！");
+
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         },
+
+        editFormCancel(formName) {
+            this.editFormVisible = false
+            this.$refs[formName].resetFields();
+        },
+        addFormCancel(formName) {
+            this.addFormVisible = false
+            this.$refs[formName].resetFields();
+        }
     },
 
 

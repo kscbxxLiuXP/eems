@@ -4,7 +4,7 @@ const reports = {
             reports: [
                 {
                     reportID: '1',
-                    eventName: '火山爆发',
+                    eventName: '福岛核电站泄漏',
                     firmID: '1',
                     reportCode: '1',
                     flowID: '1',
@@ -26,7 +26,7 @@ const reports = {
                             processTime: '2021-05-16 12:02:00',
                             processPerson: '指挥人员-王鑫',
                             processEvent: '驳回', // 驳回，审核通过，专家接入，提交,
-                            advice: '手榴弹数量过少'
+                            advice: '氢弹数量过少'
                         },
                         {
                             processTime: '2021-05-16 12:03:00',
@@ -46,7 +46,7 @@ const reports = {
                 {
                     reportID: '2',
                     eventName: '电网短路',
-                    firmID: '3',
+                    firmID: '1',
                     reportCode: '2',
                     flowID: '4',
                     reportPerson: '刘dark yeah',
@@ -71,7 +71,62 @@ const reports = {
                         }
                     ]
                 },
-
+                {
+                    reportID: '3',
+                    eventName: '电网短路',
+                    firmID: '1',
+                    reportCode: '2',
+                    flowID: '4',
+                    reportPerson: '刘dark yeah',
+                    reportPersonPhone: '5435187',
+                    reportTime: '2019-05-08',
+                    flowPerson: '王春雷',
+                    flowTime: '2019-04-03',
+                    lastUpdatePersonID: '002',
+                    status: '指挥人员审核中', // 指挥人员审核中，专家审核中，驳回，审核通过
+                    reportProcess: [
+                        {
+                            processTime: '2021-05-16 12:01:00',
+                            processPerson: '工作人员-王鑫鹏',
+                            processEvent: '创建接报', // 驳回，审核通过，专家接入，提交,
+                            advice: ''
+                        },
+                        {
+                            processTime: '2021-05-16 12:20:00',
+                            processPerson: '指挥人员-王艳',
+                            processEvent: '审核通过', // 驳回，审核通过，专家接入，提交,
+                            advice: ''
+                        }
+                    ]
+                },
+                {
+                    reportID: '4',
+                    eventName: '洪水',
+                    firmID: '2',
+                    reportCode: '3',
+                    flowID: '4',
+                    reportPerson: '曾D狗',
+                    reportPersonPhone: '468321654',
+                    reportTime: '2020-11-08',
+                    flowPerson: '王春雷',
+                    flowTime: '2019-04-03',
+                    lastUpdatePersonID: '003',
+                    status: '驳回', // 指挥人员审核中，专家审核中，驳回，审核通过
+                    reportProcess: [
+                        {
+                            processTime: '2021-05-16 12:01:00',
+                            processPerson: '工作人员-王鑫鹏',
+                            processEvent: '创建接报', // 驳回，审核通过，专家接入，提交,
+                            advice: ''
+                        },
+                        {
+                            processTime: '2021-05-16 12:20:00',
+                            processPerson: '指挥人员-王艳',
+                            processEvent: '驳回', // 驳回，审核通过，专家接入，提交,
+                            advice: '流程与险情不匹配！'
+                        }
+                    ]
+                },
             ]
         },
 

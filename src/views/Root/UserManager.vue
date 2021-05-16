@@ -122,14 +122,15 @@
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button
-                            size="mini"
+                            type="primary"
+                            circle
                             @click="handleEdit(scope.$index, scope.row)"
-                            icon="el-icon-edit">编辑</el-button>
+                            icon="el-icon-edit"></el-button>
                         <el-button
-                            size="mini"
                             type="danger"
+                            circle
                             @click="handleDelete(scope.$index, scope.row)"
-                            icon="el-icon-delete-solid">删除</el-button>
+                            icon="el-icon-delete-solid"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -361,13 +362,24 @@ export default {
         },
         // eslint-disable-next-line no-unused-vars
         handleDelete(index, row){
-            this.$message.success("删除成功")
-            this.tableData.splice(index, 1)
-            let tmp = this.$store.getters.getUsers
-            tmp = tmp.filter((obj)=>{
-                return obj.staffID !==row.staffID
-            })
-            this.$store.dispatch("asyncUpdateUser", tmp)
+
+            this.$confirm('确认要删除该条数据吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$message.success("删除成功")
+                this.tableData.splice(index, 1)
+                let tmp = this.$store.getters.getUsers
+                tmp = tmp.filter((obj)=>{
+                    return obj.staffID !==row.staffID
+                })
+                this.$store.dispatch("asyncUpdateUser", tmp)
+            }).catch(() => {
+
+            });
+
+
         },
         // eslint-disable-next-line no-unused-vars
         handleSelectionChange(val) {

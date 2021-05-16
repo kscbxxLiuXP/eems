@@ -10,10 +10,6 @@
                         <el-input v-model="formInline.name" placeholder="不限"></el-input>
                     </el-form-item>
 
-                    <el-form-item label="类型编码">
-                        <el-input v-model="formInline.number" placeholder="不限"></el-input>
-                    </el-form-item>
-
                     <el-form-item label="所属事件类型">
                         <el-select v-model="formInline.type" filterable placeholder="请选择">
                             <el-option
@@ -23,6 +19,10 @@
                                 :value="item.value">
                             </el-option>
                         </el-select>
+                    </el-form-item>
+
+                    <el-form-item label="类型编码">
+                        <el-input v-model="formInline.number" placeholder="不限"></el-input>
                     </el-form-item>
 
                     <el-form-item>
@@ -86,10 +86,10 @@
                                     transition="el-zoom-in-bottom"
                                     style="margin-right:12px">
                                     <div style="height: 200px;">
-                                        <el-steps direction="vertical" :active="3">
-                                            <el-step title="拨打120" description="呼叫救护车"></el-step>
-                                            <el-step title="拨打110" description="呼叫警车"></el-step>
-                                            <el-step title="拨打119" description="呼叫消防车"></el-step>
+                                        <el-steps direction="vertical" :active="10">
+                                            <el-step v-for="item in steps" :key="item.key" :title="item.step"
+                                                     :description="item.content"></el-step>
+
                                         </el-steps>
                                     </div>
                                     <el-button
@@ -97,7 +97,6 @@
                                         icon="el-icon-document"
                                         slot="reference"
                                         circle
-
                                     ></el-button>
                                 </el-popover>
 
@@ -175,7 +174,31 @@
                             <el-input v-model="editObj.number"></el-input>
                         </el-form-item>
 
+                        <el-form-item label="步骤">
+                            <el-button type="primary" plain @click="addStep" style="margin-left: 10px">新增步骤</el-button>
+                        </el-form-item>
+
+                        <el-form-item
+                            v-for="(step, index) in steps"
+                            :label="'步骤' + (parseInt(index)+1).toString()"
+                            :key="step.key"
+                        >
+                            <el-row :gutter="20">
+                                <el-col :span="6">
+                                    <el-input v-model="step.step"></el-input>
+                                </el-col>
+                                <el-col :span="10">
+                                    <el-input v-model="step.content"></el-input>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-button type="danger" plain v-if="index!==0" @click.prevent="removeStep(step)">删除
+                                    </el-button>
+                                </el-col>
+
+                            </el-row>
+                        </el-form-item>
                     </el-form>
+
                 </div>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="editFormCancel('form')">取 消</el-button>
@@ -197,11 +220,11 @@
                             <el-input v-model="editObj.id" :disabled="true"></el-input>
                         </el-form-item>
 
-                        <el-form-item label="处理名称"  prop="name">
+                        <el-form-item label="处理名称" prop="name">
                             <el-input v-model="editObj.name"></el-input>
                         </el-form-item>
 
-                        <el-form-item label="事件类型"  prop="type">
+                        <el-form-item label="事件类型" prop="type">
                             <el-select
                                 v-model="editObj.type"
                                 placeholder="请选择类型"
@@ -213,8 +236,32 @@
                             </el-select>
                         </el-form-item>
 
-                        <el-form-item label="类型编码"  prop="number">
+                        <el-form-item label="类型编码" prop="number">
                             <el-input v-model="editObj.number"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="步骤">
+                            <el-button type="primary" plain @click="addStep" style="margin-left: 10px">新增步骤</el-button>
+                        </el-form-item>
+
+                        <el-form-item
+                            v-for="(step, index) in steps"
+                            :label="'步骤' + (parseInt(index)+1).toString()"
+                            :key="step.key"
+                        >
+                            <el-row :gutter="20">
+                                <el-col :span="6">
+                                    <el-input v-model="step.step"></el-input>
+                                </el-col>
+                                <el-col :span="10">
+                                    <el-input v-model="step.content"></el-input>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-button type="danger" plain v-if="index!==0" @click.prevent="removeStep(step)">删除
+                                    </el-button>
+                                </el-col>
+
+                            </el-row>
                         </el-form-item>
 
                     </el-form>
@@ -248,7 +295,7 @@ export default {
                 id: '',
                 name: '',
                 type: '',
-                number: ''
+                number: '',
             },
             //查询表单
             formInline: {
@@ -257,6 +304,19 @@ export default {
                 type: '',
                 number: ''
             },
+
+            steps: [
+                {
+                    step: '拨打120',
+                    content: '呼叫救护车'
+                }, {
+                    step: '拨打110',
+                    content: '呼叫警车'
+                }, {
+                    step: '拨打119',
+                    content: '呼叫救护车'
+                },
+            ],
 
             options: [
                 {
@@ -416,14 +476,12 @@ export default {
         },
         //确认添加的信息
         addConfirm(formName) {
-
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.addFormVisible = false;
                     this.tableData.push(this.editObj);
                     this.$store.dispatch("asyncUpdateFlow", this.tableData);
                     this.$message.success("流程添加成功！");
-
                 } else {
                     console.log('error submit!!');
                     return false;
@@ -438,6 +496,19 @@ export default {
         addFormCancel(formName) {
             this.addFormVisible = false
             this.$refs[formName].resetFields();
+        },
+
+        removeStep(item) {
+            var index = this.steps.indexOf(item)
+            if (index !== -1) {
+                this.steps.splice(index, 1)
+            }
+        },
+        addStep() {
+            this.steps.push({
+                value: '',
+                key: Date.now()
+            });
         }
     },
 

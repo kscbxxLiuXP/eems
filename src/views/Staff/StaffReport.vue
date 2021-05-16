@@ -211,6 +211,11 @@
                                                     process.processEvent
                                                 }}
                                             </el-tag>
+                                            <el-tag v-if="process.processEvent==='申请专家接入'" size="medium"
+                                                    type="primary">{{
+                                                    process.processEvent
+                                                }}
+                                            </el-tag>
                                             <el-tag v-if="process.processEvent==='驳回'" size="medium" type="danger">{{
                                                     process.processEvent
                                                 }}
@@ -593,6 +598,7 @@ export default {
                 "运输手榴弹->运输火药",
                 "丢弃核弹->拨打911",
                 "拨打120->拨打110",
+                "检查子弹->射击",
             ];
             return dd[index];
         },
@@ -622,7 +628,7 @@ export default {
         handleCurrentChange(val) {
             this.currentPage = val;
         },
-        handleEdit(index, row){
+        handleEdit(index, row) {
             this.editForm = JSON.parse(JSON.stringify(row))
             this.selectedIdEdit = row.reportID
             this.editFormVisible = true
@@ -646,7 +652,7 @@ export default {
             });
 
         },
-        editReport(){
+        editReport() {
             this.$refs['editForm'].validate((valid) => {
                 if (valid) {
                     this.edit()
@@ -655,7 +661,7 @@ export default {
                 }
             });
         },
-        edit(){
+        edit() {
             let tmp = this.$store.getters.getReports
             this.editForm.status = '指挥人员审核中'
             this.editForm.reportProcess.push(
@@ -667,8 +673,8 @@ export default {
                 }
             )
             tmp.forEach((report) => {
-                if(report.reportID === this.selectedIdEdit) {
-                    for(let key in report){
+                if (report.reportID === this.selectedIdEdit) {
+                    for (let key in report) {
                         report[key] = this.editForm[key]
                     }
                     console.log(report)

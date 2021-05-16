@@ -7,11 +7,14 @@
 </template>
 
 <script>
+
+
 export default {
     name: "SmallMap",
     props: ['lng', 'lat'],
+
     mounted() {
-        console.log('lng:',this.lng,'lat:',this.lat)
+        console.log('lng:', this.lng, 'lat:', this.lat)
     }
 }
 </script>

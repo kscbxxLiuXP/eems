@@ -50,7 +50,7 @@
                 </el-form>
             </el-header>
             <el-main>
-                <div style="height: 300px">
+                <div>
                     <el-table
                         ref="multipleTable"
                         :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
@@ -61,20 +61,20 @@
                         <el-table-column
                             type="selection"
                             width="55"
-                            >
+                        >
                         </el-table-column>
 
                         <el-table-column
                             prop="id"
                             label="ID"
-                            width="120"
+                            width="100"
                             sortable>
                         </el-table-column>
 
                         <el-table-column
                             prop="name"
                             label="企业名称"
-                            width="200">
+                            width="230">
                         </el-table-column>
 
                         <el-table-column
@@ -86,30 +86,53 @@
 
                         <el-table-column
                             label="企业位置"
-                            width="200"
-                            >
+                            width="100"
+                        >
+                            <template slot-scope="scope">
+                                <el-popover
+                                    placement="right"
+                                    width="200px"
+                                    trigger="hover"
+                                >
+                                    <p>企业: {{ " " + scope.row.name }}</p>
+                                    <p>经度:  {{ " " + scope.row.location.lng }}</p>
+                                    <p>纬度: {{ " " + scope.row.location.lat }}</p>
+                                    <SmallMap :lat="getFirm(scope.row.id).location.lat"
+                                              :lng="getFirm(scope.row.id).location.lng"/>
 
+                                    <span slot="reference" class="name-wrapper">
+                            <el-button
+                                type="success" plain
+                                icon="el-icon-location-outline"
+                                slot="reference"
+                                circle
+
+                            ></el-button>
+                        </span>
+
+                                </el-popover>
+                            </template>
 
                         </el-table-column>
 
                         <el-table-column
                             prop="person"
                             label="企业法人"
-                            width="200"
+                            width="110"
                             sortable>
                         </el-table-column>
 
                         <el-table-column
                             prop="phone"
                             label="法人电话"
-                            width="200"
+                            width="110"
                             sortable>
                         </el-table-column>
 
                         <el-table-column
                             prop="type"
                             label="企业类型"
-                            width="200"
+                            width="110"
                             sortable>
                         </el-table-column>
 
@@ -117,94 +140,29 @@
                                          width="200"
                         >
                             <template slot-scope="scope">
-                                <el-popover
-                                    placement="top"
-                                    title="步骤"
-                                    trigger="click"
-                                    transition="el-zoom-in-bottom"
-                                    style="margin-right:12px">
-                                    <div style="height: 200px;">
-                                        <el-steps direction="vertical" :active="3">
-                                            <el-step title="拨打120" description="呼叫救护车"></el-step>
-                                            <el-step title="拨打110" description="呼叫警车"></el-step>
-                                            <el-step title="拨打119" description="呼叫消防车"></el-step>
-                                        </el-steps>
-                                    </div>
-                                    <el-button
-                                        type="info"
-                                        icon="el-icon-document"
-                                        slot="reference"
-                                        circle
-
-                                    ></el-button>
-                                </el-popover>
-
                                 <el-button
                                     type="primary"
                                     icon="el-icon-edit"
                                     circle
-                                    @click="editFlow(scope.row, scope.$index)"
+                                    @click="editFirm(scope.row, scope.$index)"
                                 ></el-button>
                                 <el-button
                                     type="danger"
                                     icon="el-icon-delete"
                                     circle
-                                    @click="delFlow(scope.row, scope.$index)"
+                                    @click="delFirm(scope.row, scope.$index)"
                                 ></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
                 </div>
 
-                <!--                 修改条目信息的对话框 -->
-                <el-dialog
-                    title="编辑流程信息"
-                    :visible.sync="dialogVisible"
-                    width="30%"
-                    :before-close="handleClose"
-                >
-                    <div>
-                        <el-form ref="form" :model="editObj" label-width="80px">
-
-                            <el-form-item label="流程ID">
-                                <el-input v-model="editObj.id" :disabled="true"></el-input>
-                            </el-form-item>
-
-                            <el-form-item label="处理名称">
-                                <el-input v-model="editObj.name"></el-input>
-                            </el-form-item>
-
-                            <el-form-item label="事件类型">
-                                <el-select
-                                    v-model="editObj.type"
-                                    placeholder="请选择类型"
-                                >
-                                    <el-option label="自然灾害水旱灾害一级" value="自然灾害水旱灾害一级"></el-option>
-                                    <el-option label="公共卫生事件矿泉水污染一级" value="公共卫生事件矿泉水污染一级"></el-option>
-                                    <el-option label="事故灾难公交车倒翻二级" value="事故灾难公交车倒翻二级"></el-option>
-                                    <el-option label="事故灾难工人猝死四级" value="事故灾难工人猝死四级"></el-option>
-                                </el-select>
-                            </el-form-item>
-
-                            <el-form-item label="类型编码">
-                                <el-input v-model="editObj.number"></el-input>
-                            </el-form-item>
-
-                        </el-form>
-                    </div>
-                    <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="confirm">确 定</el-button>
-                    </span>
-                </el-dialog>
-
-
             </el-main>
             <el-footer>
                 <el-row :gutter="20" style="margin-top: 40px">
                     <el-col :span="10">
                         <div>
-                            <el-button type="primary" icon="el-icon-plus" @click="addFlow"> 增加
+                            <el-button type="primary" icon="el-icon-plus" @click="addFirm"> 增加
                             </el-button>
                         </div>
                     </el-col>
@@ -221,45 +179,157 @@
             </el-footer>
 
 
-            <!--                 增加条目的对话框 -->
+            <!--                 修改条目信息的对话框 -->
             <el-dialog
-                title="新增流程"
-                :visible.sync="dialogFormVisible"
-                width="30%"
-                :before-close="handleCloseAdd"
+                title="编辑风险企业"
+                :visible.sync="editFormVisible"
+                width="600px"
+                :before-close="handleClose"
             >
                 <div>
-                    <el-form ref="form" :model="editObj" label-width="80px">
+                    <el-form ref="form" :model="editObj" :rules="firmRules" label-width="80px">
 
-                        <el-form-item label="流程ID">
+                        <el-form-item label="企业ID">
                             <el-input v-model="editObj.id" :disabled="true"></el-input>
                         </el-form-item>
 
-                        <el-form-item label="处理名称">
+                        <el-form-item label="企业名称" prop="name">
                             <el-input v-model="editObj.name"></el-input>
                         </el-form-item>
 
-                        <el-form-item label="事件类型">
+                        <el-form-item label="企业地址" prop="address">
+                            <el-input v-model="editObj.address"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="企业位置">
+                            <baidu-map class="map" :zoom="zoom" :scroll-wheel-zoom="true" :center="editObj.location"
+                                       >
+                                <bm-control>
+                                    <el-autocomplete
+
+                                        popper-class="my-autocomplete"
+                                        v-model="editObj.address"
+                                        :fetch-suggestions="querySearch"
+                                        placeholder="请输入内容"
+                                        @select="handleSelect">
+                                        <i
+                                            class="el-icon-search el-input__icon"
+                                            slot="suffix"
+                                            >
+                                        </i>
+                                        <template slot-scope="{ item }">
+                                            <div class="name">{{ item.name }}</div>
+                                            <span class="addr">{{ item.address }}</span>
+                                        </template>
+                                    </el-autocomplete>
+                                </bm-control>
+                                <bml-marker-clusterer :averageCenter="true">
+                                    <bm-marker :position="position"></bm-marker>
+                                </bml-marker-clusterer>
+                            </baidu-map>
+                        </el-form-item>
+
+                        <el-form-item label="企业法人" prop="person">
+                            <el-input v-model="editObj.person"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="企业电话" prop="phone">
+                            <el-input v-model="editObj.phone"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="企业类型" prop="type">
                             <el-select
                                 v-model="editObj.type"
                                 placeholder="请选择类型"
                             >
-                                <el-option label="自然灾害水旱灾害一级" value="自然灾害水旱灾害一级"></el-option>
-                                <el-option label="公共卫生事件矿泉水污染一级" value="公共卫生事件矿泉水污染一级"></el-option>
-                                <el-option label="事故灾难公交车倒翻二级" value="事故灾难公交车倒翻二级"></el-option>
-                                <el-option label="事故灾难工人猝死四级" value="事故灾难工人猝死四级"></el-option>
-                            </el-select>
-                        </el-form-item>
+                                <el-option label="software" value="software"></el-option>
+                                <el-option label="hardware" value="hardware"></el-option>
 
-                        <el-form-item label="类型编码">
-                            <el-input v-model="editObj.number"></el-input>
+                            </el-select>
                         </el-form-item>
 
                     </el-form>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addConfirm">确 定</el-button>
+                <el-button @click="editFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="confirm('form')">确 定</el-button>
+                    </span>
+            </el-dialog>
+
+            <!--                 增加条目的对话框 -->
+            <el-dialog
+                title="新增风险企业"
+                :visible.sync="addFormVisible"
+                width="600px"
+                :before-close="handleCloseAdd"
+            >
+                <div>
+                    <el-form ref="form" :model="editObj" :rules="firmRules" label-width="80px">
+
+                        <el-form-item label="企业ID">
+                            <el-input v-model="editObj.id" :disabled="true"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="企业名称" prop="name">
+                            <el-input v-model="editObj.name"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="企业地址" prop="address">
+                            <el-input v-model="editObj.address"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="企业位置">
+                            <baidu-map class="map" :zoom="zoom" :scroll-wheel-zoom="true" :center="editObj.location"
+                            >
+                                <bm-control>
+                                    <el-autocomplete
+
+                                        popper-class="my-autocomplete"
+                                        v-model="editObj.address"
+                                        :fetch-suggestions="querySearch"
+                                        placeholder="请输入内容"
+                                        @select="handleSelect">
+                                        <i
+                                            class="el-icon-search el-input__icon"
+                                            slot="suffix"
+                                        >
+                                        </i>
+                                        <template slot-scope="{ item }">
+                                            <div class="name">{{ item.name }}</div>
+                                            <span class="addr">{{ item.address }}</span>
+                                        </template>
+                                    </el-autocomplete>
+                                </bm-control>
+                                <bml-marker-clusterer :averageCenter="true">
+                                    <bm-marker :position="position"></bm-marker>
+                                </bml-marker-clusterer>
+                            </baidu-map>
+                        </el-form-item>
+
+                        <el-form-item label="企业法人" prop="person">
+                            <el-input v-model="editObj.person"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="企业电话" prop="phone">
+                            <el-input v-model="editObj.phone"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="企业类型" prop="type">
+                            <el-select
+                                v-model="editObj.type"
+                                placeholder="请选择类型"
+                            >
+                                <el-option label="software" value="software"></el-option>
+                                <el-option label="hardware" value="hardware"></el-option>
+
+                            </el-select>
+                        </el-form-item>
+
+                    </el-form>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="addFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addConfirm('form')">确 定</el-button>
                     </span>
             </el-dialog>
 
@@ -269,20 +339,26 @@
 
 <script>
 // import SmallMap from "@/components/SmallMap";
+import SmallMap from "@/components/SmallMap";
+import jsonpAdapter from "axios-jsonp";
+
 export default {
     name: "DangerFirm",
+    components: {SmallMap},
     // components: {SmallMap},
     data() {
         return {
             //修改信息对话框的显示属性
-            dialogVisible: false,
+            editFormVisible: false,
             itemIndex: 0,
             //分页的参数
             currentPage: 1,
             pageSize: 6,
 
             //增加的对话框
-            dialogFormVisible: false,
+            addFormVisible: false,
+
+            zoom: 15,
 
             editObj: {
                 id: '',
@@ -316,7 +392,25 @@ export default {
                     label: 'hardware'
                 }
             ],
-            //通过store获得flows的数据，放到表格中
+
+            firmRules: {
+                name: [
+                    {required: true, message: '请输入名称', trigger: 'blur'},
+                ],
+                address: [
+                    {required: true, message: '请输入地址', trigger: 'blur'}
+                ],
+                person: [
+                    {required: true, message: '请填写企业法人', trigger: 'blur'}
+                ],
+                phone: [
+                    {required: true, message: '请填写法人电话', trigger: 'blur'}
+                ],
+                type: [
+                    {required: true, message: '请选择企业类型', trigger: 'change'}
+                ],
+            },
+            //通过store获得firms的数据，放到表格中
             tableData: this.$store.getters.getFirms,
             multipleSelection: []
         }
@@ -394,7 +488,7 @@ export default {
         },
 
         //delete a item
-        delFlow(item, idx) {
+        delFirm(item, idx) {
             // 就这一点儿就可以产生dialog确定
             this.$confirm('确认删除？')
                 // eslint-disable-next-line no-unused-vars
@@ -407,57 +501,112 @@ export default {
                         return obj.id !== item.id
                     })
                     this.tableData = tmp;
-                    this.$store.dispatch("asyncUpdateFlow", tmp);
-                    this.$message.success("流程删除成功！");
+                    this.$store.dispatch("asyncUpdateFirms", tmp);
+                    this.$message.success("风险企业删除成功！");
                 })
                 // eslint-disable-next-line no-unused-vars
                 .catch(_ => {
                 });
         },
 
-        //edit a flow
-        editFlow(item, idx) {
+        //edit a firm
+        editFirm(item, idx) {
             this.itemIndex = idx;
-            this.dialogVisible = true;
+            this.editFormVisible = true;
             this.editObj = {
                 id: item.id,
                 name: item.name,
+                address: item.address,
+                location: {
+                    lat: item.location.lat,
+                    lng: item.location.lng,
+                },
+                person: item.person,
+                phone: item.phone,
                 type: item.type,
-                number: item.number
             };
         },
-        //add a flow
-        addFlow() {
-            this.dialogFormVisible = true
+        //add a firm
+        addFirm() {
+            this.addFormVisible = true
 
             this.editObj = {
                 id: parseInt(this.tableData[this.tableData.length - 1].id) + 1,
                 name: '',
+                address: '',
+                location: {
+                    lat: 41.659108,
+                    lng: 123.430933,
+                },
+                person: '',
+                phone: '',
                 type: '',
-                number: ''
             };
         },
         //关闭弹窗
         handleClose() {
-            this.dialogVisible = false;
+            this.editFormVisible = false;
         },
         //关闭弹窗
         handleCloseAdd() {
-            this.dialogFormVisible = false;
+            this.addFormVisible = false;
         },
         //确认编辑信息
-        confirm() {
-            this.dialogVisible = false;
-            this.tableData.splice(this.itemIndex, 1, this.editObj);
-            this.$store.dispatch("asyncUpdateFlow", this.tableData);
-            this.$message.success("流程修改成功！");
+        confirm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.editFormVisible = false;
+                    this.tableData.splice(this.itemIndex, 1, this.editObj);
+                    this.$store.dispatch("asyncUpdateFirms", this.tableData);
+                    this.$message.success("企业修改成功！");
+
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         },
         //确认添加的信息
-        addConfirm() {
-            this.dialogFormVisible = false;
-            this.tableData.push(this.editObj);
-            this.$store.dispatch("asyncUpdateFlow", this.tableData);
-            this.$message.success("流程添加成功！");
+        addConfirm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.addFormVisible = false;
+                    this.tableData.push(this.editObj);
+                    this.$store.dispatch("asyncUpdateFirms", this.tableData);
+                    this.$message.success("企业添加成功！");
+
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+        //查询搜索，从百度地图获取位置选项内容
+        querySearch(queryString, cb) {
+            this.$axios({
+                url: 'http://api.map.baidu.com/place/v2/search?',
+                params: {
+                    query: queryString,
+                    region: '全国',
+                    output: "json",
+                    ak: 'CeL3HySvYbvK9OuoeSXGVqCLPAtxEXaQ'
+                },
+                adapter: jsonpAdapter
+            }).then((res) => {
+                const re = res.data.results;
+                re.forEach(i => {
+                    i.value = i.name
+                })
+                cb(re);
+            });
+        },
+
+        //对表单地图的输入框选项选择后进行处理
+        handleSelect(item) {
+            this.editObj.location = item.location
+
+            this.editObj.name = item.name
+            this.editObj.address = item.address
         },
     },
 
@@ -465,7 +614,35 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+.map {
+    height: 350px;
+    width: 350px;
+}
+
+
+.my-autocomplete {
+    li {
+        line-height: normal;
+        padding: 7px;
+
+        .name {
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .addr {
+            font-size: 12px;
+            color: #b4b4b4;
+        }
+
+        .highlighted .addr {
+            color: #ddd;
+        }
+    }
+}
+
 .el-row {
     margin-bottom: 20px;
 }

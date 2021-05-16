@@ -14,6 +14,7 @@ import ExportReport from "@/views/Expert/ExportReport";
 import Dashboard from "@/views/Dashboard/Dashboard";
 import City from "@/views/Staff/City";
 import Map from "@/views/Map";
+import Emergency from "@/views/Commander/Emergency";
 
 Vue.use(Router)
 
@@ -82,10 +83,16 @@ const router = new Router({
                     component:CommanderReport,
                 },
                 {
+                    path:'/emergency',
+                    name:'Emergency',
+                    component:Emergency,
+                },
+                {
                     path:'/expertReport',
                     name:'ExpertReport',
                     component:ExportReport,
-                },{
+                },
+                {
                 path:'/map',
                     name:'map',
                     component:Map

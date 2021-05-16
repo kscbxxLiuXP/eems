@@ -22,7 +22,7 @@ const route = {
                 comment: "无"
             }, {
                 id: 3,
-                firmID: 1,
+                firmID: 2,
                 targetGoodsID: 5,
                 people: 100,
                 car: 100,

@@ -109,6 +109,19 @@ const event = {
         },
         getEventMaxID(state) {
             return state.eventMaxID
+        },
+        getEventList(state) {
+
+            let t = state.events[0].children;
+            let re = [];
+            t.forEach(i => {
+                console.log(i)
+                i.children.forEach(ii => {
+                    re.push(ii.label);
+                })
+            })
+
+            return re
         }
     },
     mutations: {

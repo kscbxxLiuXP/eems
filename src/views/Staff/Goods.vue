@@ -43,10 +43,10 @@
                 </div>
             </el-col>
             <el-col :span="3">
-                <el-button type="danger" icon="el-icon-refresh" @click="refreshInput"> 重置 </el-button>
+                <el-button type="danger" icon="el-icon-refresh" @click="refreshInput"> 重置</el-button>
             </el-col>
             <el-col :span="3">
-                <el-button type="primary" icon="el-icon-search" @click="search"> 查询 </el-button>
+                <el-button type="primary" icon="el-icon-search" @click="search"> 查询</el-button>
             </el-col>
         </el-row>
 
@@ -66,35 +66,35 @@
                     label="ID"
                     width="70">
                     <template slot-scope="scope">
-                        <span >{{ scope.row.goodsID }}</span>
+                        <span>{{ scope.row.goodsID }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                     label="物资名称"
                     width="120">
                     <template slot-scope="scope">
-                        <span >{{ scope.row.goodsName }}</span>
+                        <el-tag type="info">{{ scope.row.goodsName }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
                     label="物资数量"
                     width="90">
                     <template slot-scope="scope">
-                        <span >{{ scope.row.goodsNum }}</span>
+                        <span>{{ scope.row.goodsNum }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                     label="物资类型"
                     width="120">
                     <template slot-scope="scope">
-                        <span >{{ scope.row.goodsType }}</span>
+                        <span>{{ scope.row.goodsType }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                     label="物资清点人"
                     width="120">
                     <template slot-scope="scope">
-                        <span >{{ scope.row.goodsInventor }}</span>
+                        <span>{{ scope.row.goodsInventor }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -108,7 +108,7 @@
                     label="物资编号"
                     width="160">
                     <template slot-scope="scope">
-                        <span >{{ scope.row.goodsCode }}</span>
+                        <span>{{ scope.row.goodsCode }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -116,7 +116,7 @@
                     width="120">
                     <template slot-scope="scope">
                         <i class="el-icon-time"></i>
-                        <span >{{ scope.row.goodsTime }}</span>
+                        <span>{{ scope.row.goodsTime }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -125,7 +125,7 @@
                     <template slot-scope="scope">
                         <el-popover trigger="hover" placement="top">
                             <p>门牌号: {{ " " + scope.row.goodsAddressDetail }}</p>
-                            <p>经度:  {{ " " + scope.row.goodsLongitude }}</p>
+                            <p>经度: {{ " " + scope.row.goodsLongitude }}</p>
                             <p>纬度: {{ " " + scope.row.goodsLatitude }}</p>
                             <SmallMap :lat="parseFloat( scope.row.goodsLatitude) "
                                       :lng="parseFloat( scope.row.goodsLongitude) "/>
@@ -143,12 +143,14 @@
                         <el-button
                             size="mini"
                             @click="handleEdit(scope.$index, scope.row)"
-                            icon="el-icon-edit">编辑</el-button>
+                            icon="el-icon-edit">编辑
+                        </el-button>
                         <el-button
                             size="mini"
                             type="danger"
                             @click="handleDelete(scope.$index, scope.row)"
-                            icon="el-icon-delete-solid">删除</el-button>
+                            icon="el-icon-delete-solid">删除
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -205,7 +207,8 @@
                 </el-form-item>
 
                 <el-form-item label="物资地址" style="margin-left: 80px">
-                    <baidu-map class="map" :zoom="zoom" :scroll-wheel-zoom="true" :center="position" style="margin-left: 70px">
+                    <baidu-map class="map" :zoom="zoom" :scroll-wheel-zoom="true" :center="position"
+                               style="margin-left: 70px">
                         <bm-control>
                             <el-autocomplete
 
@@ -232,7 +235,6 @@
                 </el-form-item>
 
             </el-form>
-
 
 
             <div slot="footer" class="dialog-footer">
@@ -276,7 +278,8 @@
                 </el-form-item>
 
                 <el-form-item label="物资地址" style="margin-left: 80px">
-                    <baidu-map class="map" :zoom="zoom" :scroll-wheel-zoom="true" :center="editPosition" style="margin-left: 70px">
+                    <baidu-map class="map" :zoom="zoom" :scroll-wheel-zoom="true" :center="editPosition"
+                               style="margin-left: 70px">
                         <bm-control>
                             <el-autocomplete
 
@@ -318,7 +321,7 @@ import SmallMap from "@/components/SmallMap";
 export default {
     name: "goodsReport",
     components: {SmallMap},
-    data () {
+    data() {
         return {
             goodsName: '',
             goodsInventor: '',
@@ -365,25 +368,25 @@ export default {
             },
             goodsRules: {
                 goodsName: [
-                    { required: true, message: '请输入物资名称', trigger: 'blur' },
+                    {required: true, message: '请输入物资名称', trigger: 'blur'},
                 ],
                 goodsNum: [
-                    { required: true, message: '请输入物资数量', trigger: 'blur' }
+                    {required: true, message: '请输入物资数量', trigger: 'blur'}
                 ],
                 goodsInventor: [
-                    { required: true, message: '请填写物资清点人', trigger: 'blur' }
+                    {required: true, message: '请填写物资清点人', trigger: 'blur'}
                 ],
                 goodsInventorPhone: [
-                    { required: true, message: '请填写物资清点人电话', trigger: 'blur' }
+                    {required: true, message: '请填写物资清点人电话', trigger: 'blur'}
                 ],
                 goodsTime: [
-                    { required: true, message: '请选择物资清点时间', trigger: 'change' }
+                    {required: true, message: '请选择物资清点时间', trigger: 'change'}
                 ],
                 goodsType: [
-                    { required: true, message: '请选择物资类型', trigger: 'change' }
+                    {required: true, message: '请选择物资类型', trigger: 'change'}
                 ],
                 goodsAddress: [
-                    { required: true, message: '请选择物资存放地址', trigger: 'change' }
+                    {required: true, message: '请选择物资存放地址', trigger: 'change'}
                 ],
             },
             multipleSelection: [],
@@ -414,7 +417,7 @@ export default {
         }
     },
     methods: {
-        refreshInput(){
+        refreshInput() {
             this.goodsName = ""
             this.goodsAddress = ""
             this.goodsType = ""
@@ -425,17 +428,17 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        handleDelete(index, row){
+        handleDelete(index, row) {
             this.$message.success("删除成功")
             this.tableData.splice(index, 1)
             let tmp = this.$store.getters.getGoods
-            tmp = tmp.filter((obj)=>{
-                return obj.goodsID !==row.goodsID
+            tmp = tmp.filter((obj) => {
+                return obj.goodsID !== row.goodsID
             })
             this.$store.dispatch("asyncUpdateGoods", tmp)
         },
         // eslint-disable-next-line no-unused-vars
-        handleEdit(index, row){
+        handleEdit(index, row) {
             this.selectedIdEdit = row.goodsID
             this.editForm = JSON.parse(JSON.stringify(row))
             console.log(this.editForm)
@@ -447,30 +450,30 @@ export default {
             this.editForm.goodsAddress = row.goodsAddress
             this.editFormVisible = true
         },
-        search(){
+        search() {
             // eslint-disable-next-line no-unused-vars
             let searchList = this.$store.getters.getGoods
-            if(this.goodsName !== ""){
+            if (this.goodsName !== "") {
                 searchList = searchList.filter((obj) => {
                     return obj.goodsName.indexOf(this.goodsName) !== -1
                 })
             }
-            if(this.goodsCode !== ""){
+            if (this.goodsCode !== "") {
                 searchList = searchList.filter((obj) => {
                     return obj.goodsCode.indexOf(this.goodsCode) !== -1
                 })
             }
-            if(this.goodsType !== ""){
+            if (this.goodsType !== "") {
                 searchList = searchList.filter((obj) => {
                     return obj.goodsType === this.goodsType
                 })
             }
-            if(this.goodsAddress !== ""){
+            if (this.goodsAddress !== "") {
                 searchList = searchList.filter((obj) => {
                     return obj.goodsAddress.indexOf(this.goodsAddress) !== -1
                 })
             }
-            if(this.goodsInventor !== ""){
+            if (this.goodsInventor !== "") {
                 searchList = searchList.filter((obj) => {
                     return obj.goodsInventor === this.goodsInventor
                 })
@@ -496,9 +499,11 @@ export default {
                 }
             });
         },
-        add(){
+        add() {
             this.addFormVisible = false
-            this.addForm.goodsID ="" + (Math.max.apply(Math, this.$store.getters.getGoods.map(function(o) {return parseInt(o.goodsID)})) + 1)
+            this.addForm.goodsID = "" + (Math.max.apply(Math, this.$store.getters.getGoods.map(function (o) {
+                return parseInt(o.goodsID)
+            })) + 1)
             this.addForm.goodsCode = "" + Math.round(Math.random() * 100000)
             let tmpform = JSON.parse(JSON.stringify(this.addForm)) // 深拷贝
             let tmp = this.$store.getters.getGoods
@@ -511,7 +516,7 @@ export default {
             this.$refs['addForm'].resetFields();
             this.addFormVisible = false
         },
-        editGoods(){
+        editGoods() {
             this.$refs['editForm'].validate((valid) => {
                 if (valid) {
                     this.edit()
@@ -520,11 +525,11 @@ export default {
                 }
             });
         },
-        edit(){
+        edit() {
             let tmp = this.$store.getters.getGoods
             tmp.forEach((goods) => {
-                if(goods.goodsID === this.editForm.goodsID) {
-                    for(let key in goods){
+                if (goods.goodsID === this.editForm.goodsID) {
+                    for (let key in goods) {
                         goods[key] = this.editForm[key]
                     }
                 }
@@ -555,8 +560,8 @@ export default {
                 })
                 cb(re);
             });
-
         },
+
         handleSelect(item) {
             this.position = item.location
             this.addForm.goodsLongitude = this.position.lng
@@ -564,7 +569,7 @@ export default {
             this.addForm.goodsAddress = item.name
             this.addForm.goodsAddressDetail = item.address
         },
-        handleEditSelect(item){
+        handleEditSelect(item) {
             this.editPosition = item.location
             this.editForm.goodsLongitude = this.editPosition.lng
             this.editForm.goodsLatitude = this.editPosition.lat
@@ -587,24 +592,24 @@ export default {
 }
 
 .my-autocomplete {
-li {
-    line-height: normal;
-    padding: 7px;
+    li {
+        line-height: normal;
+        padding: 7px;
 
-.name {
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
+        .name {
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
 
-.addr {
-    font-size: 12px;
-    color: #b4b4b4;
-}
+        .addr {
+            font-size: 12px;
+            color: #b4b4b4;
+        }
 
-.highlighted .addr {
-    color: #ddd;
-}
-}
+        .highlighted .addr {
+            color: #ddd;
+        }
+    }
 }
 
 .el-row {

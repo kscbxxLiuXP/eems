@@ -2,20 +2,14 @@
     <div>
         <div style="font-size: 20px">城市信息维护</div>
         <div style="margin-top: 20px;display: flex">
-            <div>
+            <div style="display: flex;align-items: center">
                 风险企业：
-                <el-select v-model="firmValue" filterable clearable placeholder="请选择">
-                    <el-option
-                        v-for="item in firmOptions"
-                        :key="item.id"
-                        :label="item.value"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
+                <el-input v-model="firmValue" clearable placeholder="请输入">
+                </el-input>
             </div>
             <div style="margin-left: 10px;display: flex;align-items: center"><span></span>
                 目标物资：
-                <el-input v-model="targetGoods" style="width: 200px" clearable placeholder="请选择"/>
+                <el-input v-model="targetGoods" style="width: 200px" clearable placeholder="请输入"/>
 
             </div>
             <div style="margin-left: 10px">
@@ -38,12 +32,12 @@
                     </el-option>
                 </el-select>
             </div>
-            <el-button style="margin-left: 10px" icon="el-icon-search">查询</el-button>
-            <el-button>重置</el-button>
+            <el-button style="margin-left: 10px" icon="el-icon-search" type="primary" @click="search">查询</el-button>
+            <el-button type="danger" @click="resetSearch">重置</el-button>
 
         </div>
         <el-button icon="el-icon-plus" style="margin-top: 10px;margin-bottom: 10px" type="primary"
-                   @click="()=>{dialogVisible=true;editMode=1}">添加
+                   @click="editClick">添加
         </el-button>
         <el-table
             :data="tableData"
@@ -80,7 +74,10 @@
                 label="目标物资"
                 width="100">
                 <template slot-scope="scope">
-                    <span style="margin-left: 10px">{{ getGoods(scope.row.targetGoodsID).goodsName }}</span>
+                    <el-tag type="info" style="margin-left: 10px">{{
+                            getGoods(scope.row.targetGoodsID).goodsName
+                        }}
+                    </el-tag>
                 </template>
             </el-table-column>
             <el-table-column
@@ -91,9 +88,9 @@
                         <SmallMap :lat="parseFloat(getGoods(scope.row.targetGoodsID).goodsLatitude) "
                                   :lng="parseFloat(getGoods(scope.row.targetGoodsID).goodsLongitude) "/>
                         <span slot="reference" class="name-wrapper">
-                            <div>{{ getGoods(scope.row.targetGoodsID).goodsAddress }}
+                            <el-tag>{{ getGoods(scope.row.targetGoodsID).goodsAddress }}
 
-                            </div>
+                            </el-tag>
                         </span>
                     </el-popover>
                 </template>
@@ -135,21 +132,22 @@
                 <template slot-scope="scope">
                     <el-button
                         icon="el-icon-edit"
-                        size="mini"
+
                         type="primary"
                         @click="()=>{
                           dialogVisible=true;
-                          editMode=1;
-                        handleEdit(scope.$index, scope.row)
-                        }">编辑
+                          editMode=0;
+
+                          handleEdit(scope.$index, scope.row)
+                        }" circle>
                     </el-button>
                     <el-button
-                        size="mini"
+
                         icon="el-icon-delete"
                         type="danger"
                         @click="()=>{
                             handleDelete(scope.$index, scope.row)
-                        }">删除
+                        }" circle>
                     </el-button>
                 </template>
             </el-table-column>
@@ -158,29 +156,36 @@
             :title="editMode===1?'新增':'编辑'"
             :visible.sync="dialogVisible"
             width="35%"
-
         >
             <el-form :model="routeForm" :rules="rules" ref="routeForm" @submit.native.prevent>
                 <el-form-item prop="id" label="ID:" label-width="100px">
-                    <el-input style="width: 300px" v-model="routeForm.id"/>
+                    <el-input style="width: 300px" v-model="routeForm.id" :disabled="editMode===1"/>
                 </el-form-item>
                 <el-form-item prop="firmID" label="风险企业:" label-width="100px">
-                    <el-select v-model="routeForm.firmID" clearable placeholder="请选择">
+                    <el-select style="width: 300px" v-model="routeForm.firmID" clearable placeholder="请选择">
                         <el-option
                             v-for="item in firmOptions"
                             :key="item.id"
-                            :label="item.value"
-                            :value="item.value">
+                            :label="item.name"
+                            :value="item.id">
+                            <div style="height: 100%">
+                                <div class="name">{{ item.name }}</div>
+                                <span class="addr"><i class="el-icon-location-outline"></i>{{ item.address }}</span>
+                            </div>
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="targetGoodsID" label="目标物资:" label-width="100px">
                     <el-select v-model="routeForm.targetGoodsID" filterable clearable placeholder="请选择">
                         <el-option
-                            v-for="item in firmOptions"
+                            v-for="item in this.goodsData"
                             :key="item.id"
-                            :label="item.value"
-                            :value="item.value">
+                            :label="item.goodsName"
+                            :value="parseInt(item.goodsID)">
+                            <div style="height: 100%">
+                                <div class="name">{{ item.goodsName }}</div>
+                                <span class="addr"><i class="el-icon-location-outline"></i>{{ item.goodsAddress }}</span>
+                            </div>
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -191,7 +196,9 @@
                     <el-input style="width: 300px" v-model="routeForm.car"/>
                 </el-form-item>
                 <el-form-item prop="length" label="路长:" label-width="100px">
-                    <el-input style="width: 300px" v-model="routeForm.length"/>
+                    <el-input style="width: 300px" v-model="routeForm.length">
+                        <template slot="append">km</template>
+                    </el-input>
                 </el-form-item>
                 <el-form-item prop="state" label="路况:" label-width="100px">
                     <el-select v-model="routeForm.state" clearable placeholder="请选择">
@@ -217,7 +224,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button @click="handleCancel">取 消</el-button>
             <el-button type="primary" @click="handleConfirm">确 定</el-button>
   </span>
         </el-dialog>
@@ -227,29 +234,15 @@
 <script>
 import SmallMap from "@/components/SmallMap";
 
+
 export default {
     name: "City",
     components: {SmallMap},
     data() {
+
         return {
-            firmOptions: [
-                {
-                    id: 1,
-                    value: '东软',
-                },
-                {
-                    id: 2,
-                    value: '东软睿道',
-                },
-                {
-                    id: 3,
-                    value: '中软',
-                },
-                {
-                    id: 4,
-                    value: '西软',
-                },
-            ],
+            firmOptions: this.$store.getters.getFirms,
+            goodsData: this.$store.getters.getGoods,
             firmValue: '',
             roadStatus: '',
             targetGoods: '',
@@ -264,8 +257,9 @@ export default {
                 car: 0,
                 length: 0,
                 state: '正常',
-                comment: ""
+                comment: "无"
             },
+            dd: this.$store.getters.getRoutes,
             rules: {
                 id: [
                     {required: true, message: '请输入ID', trigger: 'change'}
@@ -305,22 +299,154 @@ export default {
             return goods
         },
         handleConfirm() {
-            this.dialogVisible = false
-            console.log(this.routeForm)
+            this.$refs['routeForm'].validate((valid) => {
+                if (valid) {
+                    this.dialogVisible = false
+                    if (this.editMode === 1) {
+                        //添加
+                        this.add();
+                    } else {
+                        //编辑
+                        this.edit();
+                    }
+                    console.log(this.routeForm)
+                    this.$refs['routeForm'].resetFields();
+                } else {
+                    return false;
+                }
+            });
+        },
+        handleCancel() {
+            this.dialogVisible = false;
+            this.$refs['routeForm'].resetFields();
+        },
+        add() {
+
+
+            let tmpform = JSON.parse(JSON.stringify(this.routeForm)) // 深拷贝
+            let tmp = this.$store.getters.getRoutes
+            tmp.push(tmpform)
+            this.$store.dispatch("asyncUpdateRoutes", tmp)
+            this.$message.success("添加成功！")
+
+        },
+        edit() {
+            let tmp = this.$store.getters.getRoutes
+            tmp.forEach((route) => {
+                if (route.id === this.routeForm.id) {
+                    for (let key in route) {
+                        route[key] = this.routeForm[key]
+                    }
+                }
+            })
+            this.$store.dispatch("asyncUpdateRoutes", tmp)
+            this.editFormVisible = false
+            this.$message.success('编辑成功')
+        },
+        editClick() {
+            this.dialogVisible = true;
+            this.editMode = 1;
+            this.routeForm = {
+                id: 4,
+                firmID: 1,
+                targetGoodsID: 1,
+                people: 0,
+                car: 0,
+                length: 0,
+                state: '正常',
+                comment: "无"
+            };
+            this.routeForm.id = "" + (Math.max.apply(Math, this.$store.getters.getRoutes.map(function (o) {
+                return o.id
+            })) + 1)
         },
         handleEdit(index, row) {
-            console.log(index)
-            console.log(row)
-            this.routeForm = row
-        }
+            this.routeForm = JSON.parse(JSON.stringify(row))
+            //如果有额外属性要在这里添加
+        },
+        handleDelete(index, row) {
+
+            this.$confirm('确认要删除该条数据吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.tableData.splice(index, 1)
+                let tmp = this.$store.getters.getRoutes
+                tmp = tmp.filter((obj) => {
+                    return obj.id !== row.id
+                })
+                this.$store.dispatch("asyncUpdateRoutes", tmp)
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
+            }).catch(() => {
+
+            });
+
+        },
+        search() {
+            // eslint-disable-next-line no-unused-vars
+            let searchList = this.$store.getters.getRoutes
+            if (this.firmValue !== "") {
+
+                searchList = searchList.filter((obj) => {
+
+                    // //获取企业名字
+                    let firm = this.$store.getters.getFirms.find(it =>
+                        it.id === obj.firmID
+                    );
+                    const r = firm.name.indexOf(this.firmValue)
+
+                    return r !== -1
+                })
+            }
+            if (this.targetGoods !== "") {
+                searchList = searchList.filter((obj) => {
+                    let goods = this.$store.getters.getGoods.find(it =>
+                        it.goodsID === obj.targetGoodsID.toString()
+                    );
+
+                    const r = goods.goodsName.indexOf(this.targetGoods)
+
+                    return r !== -1
+                })
+            }
+            if (this.roadStatus !== "") {
+                searchList = searchList.filter((obj) => {
+                    return obj.state === this.roadStatus
+                })
+            }
+            this.tableData = searchList
+            this.$message.success("共查找到 " + this.tableData.length + " 条记录！")
+        },
+        resetSearch() {
+            this.firmValue = ''
+            this.targetGoods = ''
+            this.roadStatus = ''
+            this.tableData = this.$store.getters.getRoutes
+        },
 
     },
     mounted() {
-
+        console.log(this.dd)
     }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.el-select-dropdown__item{
+    height: 100%;
+}
 
+.name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.addr {
+    font-size: 12px;
+    color: #b4b4b4;
+}
 </style>

@@ -7,6 +7,7 @@ import flow from "@/store/modules/flow";
 import goods from "@/store/modules/goods";
 import route from "@/store/modules/route";
 import firm from "@/store/modules/firm";
+import reports from "@/store/modules/report";
 import createPersistentState from 'vuex-persistedstate'
 
 Vue.use(Vuex);
@@ -20,5 +21,6 @@ export default new Vuex.Store({
         goods,
         route,
         firm,
+        reports
     }
 })

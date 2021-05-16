@@ -29,7 +29,7 @@ export default {
                 name: "首页",
                 icon: require("./../../assets/icons/yonghu.png"),
                 to: '/home/dashboard',
-            },{
+            }, {
                 name: "地图",
                 icon: require("./../../assets/icons/yonghu.png"),
                 to: '/map',
@@ -77,6 +77,11 @@ export default {
                     name: "接报管理",
                     icon: require("./../../assets/icons/jiebao.png"),
                     to: '/commanderReport',
+                },
+                {
+                    name: "紧急事件处理",
+                    icon: require("./../../assets/icons/jinjishijian.png"),
+                    to: '/emergency',
                 }
             ],
             item4: [

@@ -40,7 +40,8 @@ const reports = {
                             processEvent: '审核通过', // 驳回，审核通过，专家接入，提交,
                             advice: ''
                         }
-                    ]
+                    ],
+                    emergency: {},
                 },
 
                 {
@@ -69,7 +70,8 @@ const reports = {
                             processEvent: '审核通过', // 驳回，审核通过，专家接入，提交,
                             advice: ''
                         }
-                    ]
+                    ],
+                    emergency: {},
                 },
                 {
                     reportID: '3',
@@ -97,7 +99,8 @@ const reports = {
                             processEvent: '审核通过', // 驳回，审核通过，专家接入，提交,
                             advice: ''
                         }
-                    ]
+                    ],
+                    emergency: {},
                 },
                 {
                     reportID: '4',
@@ -125,7 +128,43 @@ const reports = {
                             processEvent: '驳回', // 驳回，审核通过，专家接入，提交,
                             advice: '流程与险情不匹配！'
                         }
-                    ]
+                    ],
+                    emergency: {},
+                },
+                {
+                    reportID: '5',
+                    eventName: '超级台风',
+                    firmID: '3',
+                    reportCode: '3',
+                    flowID: '4',
+                    reportPerson: '小明',
+                    reportPersonPhone: '1556666',
+                    reportTime: '2021-11-08',
+                    flowPerson: '韩梅梅',
+                    flowTime: '2021-04-03',
+                    lastUpdatePersonID: '003',
+                    status: '专家审核中', // 指挥人员审核中，专家审核中，驳回，审核通过
+                    reportProcess: [
+                        {
+                            processTime: '2021-05-16 12:01:00',
+                            processPerson: '工作人员-王鑫鹏',
+                            processEvent: '创建接报', // 驳回，审核通过，专家接入，提交,
+                            advice: ''
+                        },
+                        {
+                            processTime: '2021-05-16 12:03:00',
+                            processPerson: '工作人员-王二虎',
+                            processEvent: '编辑接报', // 驳回，审核通过，专家接入，提交,
+                            advice: ''
+                        },
+                        {
+                            processTime: '2021-05-16 12:02:00',
+                            processPerson: '指挥人员-王鑫',
+                            processEvent: '申请专家接入', // 驳回，审核通过，专家接入，提交,
+                            advice: '请专家指示'
+                        }
+                    ],
+                    emergency: {},
                 },
             ]
         },
@@ -136,7 +175,7 @@ const reports = {
         },
         getReport(state) {
             return function (reportID) {
-                return state.reports.find(item => item.reportID ===  reportID.toString())
+                return state.reports.find(item => item.reportID === reportID.toString())
             }
         }
     },

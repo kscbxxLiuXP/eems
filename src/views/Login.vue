@@ -7,7 +7,7 @@
 
 
         <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" class="login-box"
-                 @submit.native.prevent
+
         >
             <img src="@/assets/profile.png" width="100px"/>
             <div style="width: 300px;color: #A39D9A;font-size: 26px;margin-top: 10px;margin-bottom: 10px">欢迎使用</div>
@@ -23,7 +23,7 @@
             <a href="" style="text-align: right;width: 300px;color: #A39D9A">忘记密码?</a>
             <el-form-item>
 
-                <el-button type="primary" style="margin-top: 5px;border-radius: 20px;width: 300px;height: 35px"
+                <el-button type="primary" native-type="submit" style="margin-top: 5px;border-radius: 20px;width: 300px;height: 35px"
                            @click="submitForm('loginForm')">登录
                 </el-button>
                 <el-popover

@@ -393,7 +393,7 @@ export default {
             multipleSelection: [],
             selectedUsers: [],
             currentPage: 1,
-            pageSize: 5,
+            pageSize: 4,
             addFormVisible: false,
             editFormVisible: false,
             tableData: this.$store.getters.getGoods,

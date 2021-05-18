@@ -177,6 +177,10 @@
                                     scope.row.status
                                 }}
                             </el-tag>
+                            <el-tag v-if="scope.row.status==='紧急事件处理'" size="medium" type="warning">{{
+                                    scope.row.status
+                                }}
+                            </el-tag>
                             <el-tag v-if="scope.row.status==='驳回'" size="medium" type="danger">{{
                                     scope.row.status
                                 }}
@@ -210,6 +214,11 @@
                                             <el-tag v-if="process.processEvent==='编辑接报'" size="medium" type="warning">{{
                                                     process.processEvent
                                                 }}
+                                            </el-tag>
+                                                        <el-tag v-if="process.processEvent==='紧急事件处理'" size="medium"
+                                                                type="warning">{{
+                                                                process.processEvent
+                                                            }}
                                             </el-tag>
                                             <el-tag v-if="process.processEvent==='申请专家接入'" size="medium"
                                                     type="primary">{{
@@ -423,7 +432,7 @@ export default {
             status: '',
             reportTableData: this.$store.getters.getReports,
             currentPage: 1,
-            pageSize: 5,
+            pageSize: 4,
             addFormVisible: false,
             editFormVisible: false,
             loginStaff: this.$store.getters.getUser(localStorage.getItem('token')).staffName,
@@ -458,7 +467,8 @@ export default {
                         processEvent: '创建接报', // 驳回，审核通过，专家接入，提交,
                         advice: ''
                     }
-                ]
+                ],
+                emergency: {},
             },
             editForm: {
                 reportID: '',
@@ -473,7 +483,8 @@ export default {
                 flowTime: '2021-05-16',
                 lastUpdatePersonID: this.$store.getters.getUser(localStorage.getItem('token')).staffID,
                 status: '指挥人员审核中', // 指挥人员审核中，专家审核中，驳回，审核通过
-                reportProcess: []
+                reportProcess: [],
+                emergency: {},
             },
             rules: {
                 eventName: [
@@ -580,8 +591,9 @@ export default {
                 return parseInt(o.reportID)
             })) + 1)
             this.addForm.reportCode = "" + Math.round(Math.random() * 100000)
-            this.addForm.reportProcess.processTime = this.getNowFormatDate()
-            this.addForm.reportProcess.processPerson = this.loginStaff
+            this.addForm.reportProcess[0].processTime = this.getNowFormatDate()
+            this.addForm.reportProcess[0].processPerson = this.loginStaff
+            console.log(this.addForm)
             let tmpform = JSON.parse(JSON.stringify(this.addForm)) // 深拷贝
             let tmp = this.$store.getters.getReports
             tmp.push(tmpform)

@@ -100,13 +100,13 @@
             </el-table-column>
             <el-table-column
                 prop="firmID"
-                label="风险企业名称"
-                width="105">
+                label="风险企业ID"
+                width="100">
             </el-table-column>
             <el-table-column
                 prop="reportCode"
                 label="代码"
-                width="55">
+                width="80">
             </el-table-column>
             <el-table-column
                 prop="flowID"
@@ -145,13 +145,17 @@
             </el-table-column>
             <el-table-column
                 label="流程状态"
-                width="120">
+                width="130">
                 <template slot-scope="scope">
                     <el-tag v-if="scope.row.status==='指挥人员审核中'" size="medium" type="success">{{
                             scope.row.status
                         }}
                     </el-tag>
                     <el-tag v-if="scope.row.status==='专家审核中'" size="medium" type="warning">{{
+                            scope.row.status
+                        }}
+                    </el-tag>
+                    <el-tag v-if="scope.row.status==='紧急事件处理'" size="medium" type="warning">{{
                             scope.row.status
                         }}
                     </el-tag>
@@ -209,6 +213,11 @@
                                                     process.processEvent
                                                 }}
                                             </el-tag>
+                                                <el-tag v-if="process.processEvent==='紧急事件处理'" size="medium" type="warning">{{
+                                                        process.processEvent
+                                                    }}
+                                            </el-tag>
+
                                             <el-tag v-if="process.processEvent==='申请专家接入'" size="medium" type="primary">{{
                                                     process.processEvent
                                                 }}

@@ -45,6 +45,14 @@
                                                     process.processEvent
                                                 }}
                                             </el-tag>
+                                            <el-tag v-if="process.processEvent==='紧急事件处理'" size="medium" type="warning">{{
+                                                    process.processEvent
+                                                }}
+                                            </el-tag>
+                                            <el-tag v-if="process.processEvent==='申请专家接入'" size="medium" type="primary">{{
+                                                    process.processEvent
+                                                }}
+                                            </el-tag>
                                             <el-tag v-if="process.processEvent==='驳回'" size="medium" type="danger">{{
                                                     process.processEvent
                                                 }}

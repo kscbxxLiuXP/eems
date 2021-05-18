@@ -51,7 +51,7 @@
                 </el-form>
             </el-header>
             <el-main>
-                <div>
+                <div style="height: 380px; margin-bottom: 0px">
                     <el-table
                         ref="multipleTable"
                         :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"

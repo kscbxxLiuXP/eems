@@ -82,7 +82,8 @@
         <div style="margin-top: 20px;font-size: 20px">
             待审核接报列表
         </div>
-        <el-table :data="tableData"
+        <div style="height: 400px; margin-bottom: 0px">
+        <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
                   style="width: 100%">
             <el-table-column
                 type="selection"
@@ -91,7 +92,8 @@
             <el-table-column
                 prop="reportID"
                 label="ID"
-                width="55">
+                width="65"
+                sortable>
             </el-table-column>
             <el-table-column
                 prop="eventName"
@@ -155,6 +157,10 @@
                             scope.row.status
                         }}
                     </el-tag>
+                    <el-tag v-if="scope.row.status==='紧急事件处理'" size="medium" type="warning">{{
+                            scope.row.status
+                        }}
+                    </el-tag>
                     <el-tag v-if="scope.row.status==='驳回'" size="medium" type="danger">{{ scope.row.status }}</el-tag>
                     <el-tag v-if="scope.row.status==='审核通过'" size="medium" type="success">{{
                             scope.row.status
@@ -171,7 +177,7 @@
                         icon="el-icon-view"
 
                         type="primary"
-                        @click="handleViewClicked(scope.row,false)" :disabled="scope.row.status!=='指挥人员审核中'">审核
+                        @click="handleViewClicked(scope.row,false)" :disabled="scope.row.status!=='专家审核中'">审核
                     </el-button>
                     <el-button
                         icon="el-icon-view"
@@ -182,6 +188,14 @@
             </el-table-column>
 
         </el-table>
+        </div>
+        <el-pagination
+            @size-change="handleSizeChange" @current-change="handleCurrentChange"
+            background
+            layout="prev, pager, next"
+            :total="100"
+        style="margin-left: 500px">
+        </el-pagination>
         <el-dialog
             title="接报审核"
             :visible.sync="dialogVisible"
@@ -209,6 +223,12 @@
                                                     process.processEvent
                                                 }}
                                             </el-tag>
+                                                <el-tag v-if="process.processEvent==='紧急事件处理'" size="medium"
+                                                        type="warning">{{
+                                                        process.processEvent
+                                                    }}
+                                            </el-tag>
+
                                             <el-tag v-if="process.processEvent==='申请专家接入'" size="medium" type="primary">{{
                                                     process.processEvent
                                                 }}
@@ -308,7 +328,7 @@
             </div>
             <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible=false">取 消</el-button>
-                <el-button type="warning" @click="handleExpertIn" :disabled="viewMode">申请专家接入</el-button>
+
             <el-button type="success" @click="handleViewPass" :disabled="viewMode">通过审核</el-button>
             <el-button type="danger" @click="handleViewFail" :disabled="viewMode">驳回</el-button>
 
@@ -336,6 +356,9 @@ export default {
             flowTime: '',
             lastUpdatePersonID: '',
             status: '',
+            //分页的参数
+            currentPage: 1,
+            pageSize: 4,
             loginStaff: localStorage.getItem('token'),
             options: [
                 {
@@ -371,6 +394,17 @@ export default {
             this.lastUpdatePersonID = ""
             this.status = ""
             this.tableData = this.$store.getters.getReports
+        },
+        //每页条数改变时触发 选择一页显示多少行
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+            this.currentPage = 1;
+            this.pageSize = val;
+        },
+        //当前页改变时触发 跳转其他页
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+            this.currentPage = val;
         },
         search() {
             // eslint-disable-next-line no-unused-vars
@@ -418,12 +452,16 @@ export default {
             this.tableData = searchList
             this.$message.success("共查找到 " + this.tableData.length + " 条记录！")
         },
+        // 接报审核的信息框显示
         handleViewClicked(row, viewMode) {
             this.dialogVisible = true;
+
             this.currentReport = JSON.parse(JSON.stringify(row));
+            //审核模式或查看模式
             this.viewMode = viewMode
             console.log(row)
         },
+
         handleViewPass() {
             //审核通过
             this.$confirm('您确认要 通过审核 该接报吗(操作不可逆)?', '提示', {
@@ -435,10 +473,12 @@ export default {
                     type: 'success',
                     message: '通过审核成功!'
                 });
+
                 this.updateReport(this.currentReport.reportID, '审核通过', '审核通过', '')
                 this.dialogVisible = false
             }).catch();
         },
+
         handleViewFail() {
             //审核不通过
             this.$prompt('请输入驳回理由', '提示', {
@@ -449,28 +489,13 @@ export default {
                     type: 'success',
                     message: '接报驳回成功'
                 });
-                this.updateReport(this.currentReport.reportID, '审核不通过', '驳回', value)
+                this.updateReport(this.currentReport.reportID, '驳回', '驳回', value)
 
                 this.dialogVisible = false
             }).catch();
         },
-        handleExpertIn() {
-            //专家接入
-            this.$confirm('您确认要申请 专家接入吗?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '已申请专家接入!'
-                });
-                this.updateReport(this.currentReport.reportID, '专家审核中', '申请专家接入', '')
 
-                this.dialogVisible = false
-            }).catch();
-
-        },
+        //更新接报内容
         // eslint-disable-next-line no-unused-vars
         updateReport(reportID, status, event, advice) {
             let usr = this.$store.getters.getUser(localStorage.getItem('token'))
@@ -483,7 +508,7 @@ export default {
                     report.lastUpdatePersonID = usr.staffID
                     let ev = {
                         processTime: this.getNowFormatDate(),
-                        processPerson: '指挥人员-' + usr.staffName,
+                        processPerson: '专家-' + usr.staffName,
                         processEvent: event, // 驳回，审核通过，专家接入，提交,
                         advice: advice
                     }
@@ -497,6 +522,7 @@ export default {
             const firm = this.$store.getters.getFirm(parseInt(this.currentReport.firmID))
             return firm
         },
+        //获取当前时间格式的字符串
         getNowFormatDate() {
             var date = new Date();
             var seperator1 = "-";
@@ -514,6 +540,8 @@ export default {
                 + seperator2 + date.getSeconds();
             return currentdate;
         },
+
+        // 返回随机步骤
         randomFlow() {
             let index = Math.round(Math.random() * 7);
             let dd = [
@@ -560,7 +588,6 @@ export default {
                 }],
             ];
             return dd[index];
-
         }
     },
     mounted() {

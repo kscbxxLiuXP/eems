@@ -34,7 +34,7 @@
                 </el-form>
             </el-header>
             <el-main>
-                <div>
+                <div style="height: 380px; margin-bottom: 0px">
                     <el-table
                         ref="multipleTable"
                         :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
@@ -286,7 +286,7 @@ export default {
             itemIndex: 0,
             //分页的参数
             currentPage: 1,
-            pageSize: 6,
+            pageSize: 5,
 
             //增加的对话框
             addFormVisible: false,

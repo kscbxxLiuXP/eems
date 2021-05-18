@@ -23,6 +23,39 @@ const firm = {
                 person: '曾先生',
                 phone: '114',
                 type: 'software'
+            },{
+                id: 3,
+                name: '腾讯科技有限公司',
+                address: '广东省深圳市南山区海天二路33号腾讯滨海大厦',
+                location: {
+                    lat: 22.528466,
+                    lng: 113.942304,
+                },
+                person: '曾先生',
+                phone: '114',
+                type: 'software'
+            },{
+                id: 4,
+                name: '华为技术有限公司',
+                address: '深圳市龙岗区稼先路与冲之大道交叉路口往西南约100米(华为基地-G区)',
+                location: {
+                    lat: 22.656137,
+                    lng: 114.066131,
+                },
+                person: '曾先生',
+                phone: '114',
+                type: 'hardware'
+            },{
+                id: 5,
+                name: '字节跳动科技有限公司',
+                address: '学清路10号院学清嘉创大厦一层',
+                location: {
+                    lat: 40.020129,
+                    lng: 116.359251,
+                },
+                person: '曾先生',
+                phone: '114',
+                type: 'software'
             },
         ],
     },
